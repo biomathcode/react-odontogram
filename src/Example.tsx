@@ -878,22 +878,14 @@ export default SvgComponent
 
 
 export function Example() {
-	const [selected, setSelected] = React.useState([])
 
 	return (
-		<div>
 
-			<h1>Odontogram</h1>
-			<SvgComponent
-				onChange={(select) => {
-					setSelected(select)
-				}}
-			/>
-			<div style={{ marginTop: "1rem" }}>
-				<strong>Currently selected:</strong>{" "}
-				{selected.length > 0 ? selected.join(", ") : "None"}
-			</div>
+		<SvgComponent
 
-		</div>
+		/>
+
+
+
 	);
 }

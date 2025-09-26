@@ -1,7 +1,7 @@
 {
 	"name": "typescript-react-package-starter",
 	"description": "",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"author": "",
 	"license": "",
 	"keywords": [],
@@ -30,7 +30,9 @@
 			"import": "./dist/index.mjs"
 		}
 	},
-	"files": ["dist"],
+	"files": [
+		"dist"
+	],
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@ryansonshine/cz-conventional-changelog"

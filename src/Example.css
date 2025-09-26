@@ -1,0 +1,82 @@
+
+
+:root {
+  --dark-blue: #3E5EDC;
+  --base-blue: #8A98BE;
+  --light-blue: #C6CCF8;
+}
+
+
+
+svg {
+  color: var(--base-blue);
+  fill: 'none';
+  transition: all ease-in 125ms;
+
+}
+
+
+
+
+svg path:nth-of-type(2) {
+ opacity: 0;
+  transition: all ease-in 200ms;
+}
+
+
+
+
+
+.Odontogram g.selected path:nth-of-type(2) {
+  fill: var(--light-blue);
+  opacity: 1;
+}
+
+
+.Odontogram g.selected path:first-of-type {
+    transition: stroke 1s ease;
+}
+
+/* Animate dash on hover */
+.Odontogram g.selected:hover path:first-of-type {
+   stroke: currentColor;
+  stroke-width: 1;
+  stroke-linecap: round;
+  stroke-dasharray: 4 4;  /* dash length + gap */
+  stroke-dashoffset: 0;
+  transition: stroke 5s ease;
+  animation: dash-move 1s linear infinite;
+  animation-delay: 1s;
+  
+  filter: drop-shadow(0 0 8px currentColor);
+  -webkit-filter: drop-shadow(0 0 8px currentColor);
+
+}
+
+@keyframes dash-move {
+  to {
+    stroke-dashoffset: 8;  /* move by one dash+gap length */
+  }
+}
+
+
+
+.Odontogram g.selected {
+  /* fill: var(--light-blue);  */
+  /* stroke: var(--dark-blue); */
+  /* stroke-width: 1.5; */
+  transition: all 0.3s ease;
+    color : var(--dark-blue);
+}
+
+.Odontogram g.selected path {
+  stroke-width: 1.5;
+
+}
+
+
+
+g[class^="teeth-"]:hover path:nth-of-type(2) {
+ fill: var(--light-blue);
+  opacity: 1;
+}

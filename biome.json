@@ -1,0 +1,74 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.9.4/schema.json",
+	"files": {
+		"ignore": [
+			"**/dist/**",
+			"**/storybook-static/**",
+			"**/coverage/**",
+			"**/.next/**",
+			"**/node_modules/**"
+		]
+	},
+	"organizeImports": {
+		"enabled": true
+	},
+	"css": {
+		"formatter": {
+			"enabled": true
+		},
+		"linter": {
+			"enabled": true
+		}
+	},
+
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"nursery": {
+				"useSortedClasses": {
+					"fix": "safe",
+					"level": "error",
+					"options": {
+						"attributes": ["classList"],
+						"functions": ["clsx", "cm", "cva", "tw"]
+					}
+				}
+			},
+			"all": true,
+			"style": {
+				"noDefaultExport": "off",
+				"useFilenamingConvention": "off",
+				"useNamingConvention": {
+					"level": "error",
+					"options": {
+						"strictCase": false
+					}
+				}
+			},
+			"performance": {
+				"noReExportAll": "off",
+				"noBarrelFile": "off"
+			},
+			"suspicious": {
+				"noReactSpecificProps": "off",
+				"noConsole": {
+					"fix": "none",
+					"level": "warn"
+				},
+				"noConsoleLog": {
+					"fix": "none",
+					"level": "warn"
+				}
+			},
+			"correctness": {
+				"useImportExtensions": "off",
+				"noUndeclaredDependencies": "off",
+				"noUnusedVariables": "off",
+				"noNodejsModules": "off"
+			}
+		}
+	},
+	"formatter": {
+		"enabled": true
+	}
+}

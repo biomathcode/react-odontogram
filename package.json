@@ -4,11 +4,7 @@
 	"version": "0.0.1",
 	"author": "Pratik Sharma <sharma.pratik2016@gmail.com>",
 	"license": "MIT",
-	"keywords": [
-		"odontogram",
-		"react",
-		"dental-chart"
-	],
+	"keywords": ["odontogram", "react", "dental-chart"],
 	"publishConfig": {
 		"access": "public"
 	},
@@ -28,7 +24,8 @@
 		"storybook:build": "storybook build",
 		"release": "pnpm build && pnpm release-it",
 		"link:self": "pnpm link --global",
-		"prepare": "lefthook install"
+		"prepare": "lefthook install",
+		"deploy-storybook": "gh-pages -d storybook-static"
 	},
 	"types": "./dist/index.d.ts",
 	"exports": {
@@ -37,9 +34,7 @@
 			"import": "./dist/index.mjs"
 		}
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@ryansonshine/cz-conventional-changelog"
@@ -80,6 +75,7 @@
 		"@vitest/coverage-v8": "3.0.9",
 		"concurrently": "9.1.2",
 		"dotenv": "^16.4.7",
+		"gh-pages": "^6.3.0",
 		"jsdom": "26.0.0",
 		"lefthook": "1.11.3",
 		"prop-types": "15.8.1",

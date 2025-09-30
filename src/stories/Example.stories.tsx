@@ -1,6 +1,6 @@
 import type { Meta, StoryFn } from "@storybook/react";
 
-import { Example } from "..";
+import Example from "..";
 
 export default {
 	title: "Example",
@@ -8,10 +8,6 @@ export default {
 	argTypes: {},
 } as Meta<typeof Example>;
 
-const Template: StoryFn<typeof Example> = (args) => <Example {...args} />;
+const Template: StoryFn<typeof Example> = () => <Example />;
 
 export const Primary = Template.bind({});
-
-Primary.args = {
-	text: "Clicked this many times:",
-};

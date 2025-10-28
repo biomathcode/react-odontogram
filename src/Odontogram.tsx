@@ -1,6 +1,6 @@
 import "./styles.css";
-import { teethPaths } from "./data";
 import { useCallback, useState } from "react";
+import { teethPaths } from "./data";
 
 interface TeethProps {
 	name: string;
@@ -37,13 +37,31 @@ const Teeth = ({
 		}}
 	>
 		<title>{name}</title>
-		<path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d={outlinePath} />
+		<path
+			stroke="currentColor"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+			d={outlinePath}
+		/>
 		<path fill="currentColor" d={shadowPath} />
-		{Array.isArray(lineHighlightPath)
-			? lineHighlightPath.map((d, i) => (
-				<path key={i} stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d={d} />
+		{Array.isArray(lineHighlightPath) ? (
+			lineHighlightPath.map((d, i) => (
+				<path
+					key={i}
+					stroke="currentColor"
+					strokeLinecap="round"
+					strokeLinejoin="round"
+					d={d}
+				/>
 			))
-			: <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" d={lineHighlightPath} />}
+		) : (
+			<path
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				d={lineHighlightPath}
+			/>
+		)}
 	</g>
 );
 
@@ -62,7 +80,9 @@ const Odontogram: React.FC<OdontogramProps> = ({
 	selectedColor = "#1E90FF",
 	hoverColor = "#60A5FA",
 }) => {
-	const [selected, setSelected] = useState<Set<string>>(new Set(defaultSelected));
+	const [selected, setSelected] = useState<Set<string>>(
+		new Set(defaultSelected),
+	);
 
 	const handleToggle = useCallback(
 		(name: string) => {
@@ -73,7 +93,7 @@ const Odontogram: React.FC<OdontogramProps> = ({
 				return updated;
 			});
 		},
-		[onChange]
+		[onChange],
 	);
 
 	const handleKeyDown = useCallback(
@@ -83,7 +103,7 @@ const Odontogram: React.FC<OdontogramProps> = ({
 				handleToggle(name);
 			}
 		},
-		[handleToggle]
+		[handleToggle],
 	);
 
 	const quadrants = [
@@ -132,8 +152,6 @@ const Odontogram: React.FC<OdontogramProps> = ({
 					touchAction: "manipulation",
 				}}
 			>
-
-
 				<g name="upper">
 					{quadrants.slice(0, 2).map(({ name, transform }, index) => (
 						<g key={name} name={name} transform={transform}>

@@ -6,9 +6,7 @@ export default {
 	component: Odontogram,
 } as Meta<typeof Odontogram>;
 
-const Template: StoryFn<typeof Odontogram> = (args) => (
-	<Odontogram {...args} />
-);
+const Template: StoryFn<typeof Odontogram> = (args) => <Odontogram {...args} />;
 
 export const Default = Template.bind({});
 Default.args = {

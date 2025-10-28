@@ -29,12 +29,14 @@ export default {
 	},
 } as Meta<typeof Odontogram>;
 
-const Template: StoryFn<typeof Odontogram> = (args) => <Odontogram {...args}
-	onChange={(selected) => {
-		alert(JSON.stringify(selected))
-	}}
-
-/>;
+const Template: StoryFn<typeof Odontogram> = (args) => (
+	<Odontogram
+		{...args}
+		onChange={(selected) => {
+			alert(JSON.stringify(selected));
+		}}
+	/>
+);
 
 export const Light = Template.bind({});
 Light.args = {
@@ -57,7 +59,6 @@ Dark.args = {
 Dark.parameters = {
 	backgrounds: { default: "dark" },
 };
-
 
 export const Default = Template.bind({});
 Default.args = {

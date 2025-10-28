@@ -6,9 +6,9 @@
 
 /* 🌙 Dark theme overrides */
 .Odontogram svg.dark-theme {
-	--dark-blue: #aab6ff;   /* lighter blue for contrast on dark bg */
-	--base-blue: #d0d5f6;   /* light muted base */
-	--light-blue: #5361e6;  /* vibrant highlight blue */
+	--dark-blue: #aab6ff; /* lighter blue for contrast on dark bg */
+	--base-blue: #d0d5f6; /* light muted base */
+	--light-blue: #5361e6; /* vibrant highlight blue */
 	background-color: #0b0d1a; /* optional page background */
 	color-scheme: dark;
 	color: #e4e6ef;

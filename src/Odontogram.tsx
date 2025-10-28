@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { teethPaths } from "./data";
 
 interface TeethProps {
@@ -29,23 +29,55 @@ export interface OdontogramProps {
 	className?: string;
 	selectedColor?: string;
 	hoverColor?: string;
-	theme: "light" | "dark",
-	colors: Record<string, string>,
+	theme: "light" | "dark";
+	colors: Record<string, string>;
 	notation?: "FDI" | "Universal" | "Palmer";
 }
 
-
-function convertFDIToNotation(fdi: string, notation: "FDI" | "Universal" | "Palmer") {
+function convertFDIToNotation(
+	fdi: string,
+	notation: "FDI" | "Universal" | "Palmer",
+) {
 	const num = fdi.replace("teeth-", "");
 
 	const fdiToUniversal: Record<string, number> = {
-		"11": 8, "12": 7, "13": 6, "14": 5, "15": 4, "16": 3, "17": 2, "18": 1,
-		"21": 9, "22": 10, "23": 11, "24": 12, "25": 13, "26": 14, "27": 15, "28": 16,
-		"31": 24, "32": 23, "33": 22, "34": 21, "35": 20, "36": 19, "37": 18, "38": 17,
-		"41": 25, "42": 26, "43": 27, "44": 28, "45": 29, "46": 30, "47": 31, "48": 32,
+		"11": 8,
+		"12": 7,
+		"13": 6,
+		"14": 5,
+		"15": 4,
+		"16": 3,
+		"17": 2,
+		"18": 1,
+		"21": 9,
+		"22": 10,
+		"23": 11,
+		"24": 12,
+		"25": 13,
+		"26": 14,
+		"27": 15,
+		"28": 16,
+		"31": 24,
+		"32": 23,
+		"33": 22,
+		"34": 21,
+		"35": 20,
+		"36": 19,
+		"37": 18,
+		"38": 17,
+		"41": 25,
+		"42": 26,
+		"43": 27,
+		"44": 28,
+		"45": 29,
+		"46": 30,
+		"47": 31,
+		"48": 32,
 	};
 
-	if (notation === "Universal") return String(fdiToUniversal[num] ?? num);
+	if (notation === "Universal") {
+		return String(fdiToUniversal[num] ?? num);
+	}
 
 	if (notation === "Palmer") {
 		const quadrant = num[0];
@@ -62,7 +94,6 @@ function convertFDIToNotation(fdi: string, notation: "FDI" | "Universal" | "Palm
 	return num;
 }
 
-
 function getToothNotations(fdi: string) {
 	const num = fdi.replace("teeth-", "");
 	const universal = convertFDIToNotation(fdi, "Universal");
@@ -74,7 +105,6 @@ function getToothNotations(fdi: string) {
 	};
 }
 
-
 const Teeth = ({
 	name,
 	outlinePath,
@@ -83,8 +113,7 @@ const Teeth = ({
 	selected,
 	onClick,
 	onKeyDown,
-	children
-
+	children,
 }: TeethProps) => (
 	<g
 		className={`${name} ${selected ? "selected" : ""}`}
@@ -130,7 +159,6 @@ const Teeth = ({
 	</g>
 );
 
-
 const Odontogram: React.FC<OdontogramProps> = ({
 	defaultSelected = [],
 	onChange,
@@ -138,22 +166,19 @@ const Odontogram: React.FC<OdontogramProps> = ({
 	theme = "light",
 	colors = {},
 	notation,
-
 }) => {
-
 	const themeColors =
 		theme === "dark"
 			? {
-				"--dark-blue": "#aab6ff",
-				"--base-blue": "#d0d5f6",
-				"--light-blue": "#5361e6",
-			}
+					"--dark-blue": "#aab6ff",
+					"--base-blue": "#d0d5f6",
+					"--light-blue": "#5361e6",
+				}
 			: {
-				"--dark-blue": "#3e5edc",
-				"--base-blue": "#8a98be",
-				"--light-blue": "#c6ccf8",
-			};
-
+					"--dark-blue": "#3e5edc",
+					"--base-blue": "#8a98be",
+					"--light-blue": "#c6ccf8",
+				};
 
 	const [selected, setSelected] = useState<Set<string>>(
 		new Set(defaultSelected),
@@ -181,7 +206,7 @@ const Odontogram: React.FC<OdontogramProps> = ({
 				return updated;
 			});
 		},
-		[onChange]
+		[onChange],
 	);
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent<SVGGElement>, name: string) => {
@@ -225,7 +250,7 @@ const Odontogram: React.FC<OdontogramProps> = ({
 		<div
 			className={`Odontogram ${theme === "dark" ? "dark-theme" : ""}`}
 			style={{
-				...finalColors as React.CSSProperties,
+				...(finalColors as React.CSSProperties),
 				width: "100%",
 				maxWidth: 300,
 				margin: "0 auto",
@@ -266,12 +291,17 @@ const Odontogram: React.FC<OdontogramProps> = ({
 	);
 };
 
-
 function mapToCssVars(colors: Record<string, string | undefined>) {
 	const cssVars: Record<string, string> = {};
-	if (colors.darkBlue) cssVars["--dark-blue"] = colors.darkBlue;
-	if (colors.baseBlue) cssVars["--base-blue"] = colors.baseBlue;
-	if (colors.lightBlue) cssVars["--light-blue"] = colors.lightBlue;
+	if (colors.darkBlue) {
+		cssVars["--dark-blue"] = colors.darkBlue;
+	}
+	if (colors.baseBlue) {
+		cssVars["--base-blue"] = colors.baseBlue;
+	}
+	if (colors.lightBlue) {
+		cssVars["--light-blue"] = colors.lightBlue;
+	}
 	return cssVars;
 }
 

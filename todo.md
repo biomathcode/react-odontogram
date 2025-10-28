@@ -14,6 +14,8 @@
 - [ ] Render the component Docs
 - [ ] Add Validations
 - [ ] Add form usage support
+- [ ] Add Rectangle select and circle selection
+- [ ] Dental Notions 
 
 
 ### Reference 
@@ -21,3 +23,7 @@
 https://www.a11y-collective.com/blog/svg-accessibility/
 
 https://fizz.studio/blog/reliable-valid-svg-accessibility/
+
+
+### Medical References
+[Symbols ](https://hsps.pro/DentrixAscend/Help/Charting_symbols.htm)

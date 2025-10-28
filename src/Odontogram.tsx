@@ -1,5 +1,5 @@
 import "./styles.css";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { teethPaths } from "./data";
 
 interface TeethProps {
@@ -10,7 +10,70 @@ interface TeethProps {
 	selected?: boolean;
 	onClick?: (name: string) => void;
 	onKeyDown?: (e: React.KeyboardEvent<SVGGElement>, name: string) => void;
+	children?: React.ReactNode;
 }
+
+export interface ToothDetail {
+	id: string;
+	notations: {
+		fdi: string;
+		universal: string;
+		palmer: string;
+	};
+	type: string;
+}
+
+export interface OdontogramProps {
+	defaultSelected?: string[];
+	onChange?: (selected: ToothDetail[]) => void;
+	className?: string;
+	selectedColor?: string;
+	hoverColor?: string;
+	theme: "light" | "dark",
+	colors: Record<string, string>,
+	notation?: "FDI" | "Universal" | "Palmer";
+}
+
+
+function convertFDIToNotation(fdi: string, notation: "FDI" | "Universal" | "Palmer") {
+	const num = fdi.replace("teeth-", "");
+
+	const fdiToUniversal: Record<string, number> = {
+		"11": 8, "12": 7, "13": 6, "14": 5, "15": 4, "16": 3, "17": 2, "18": 1,
+		"21": 9, "22": 10, "23": 11, "24": 12, "25": 13, "26": 14, "27": 15, "28": 16,
+		"31": 24, "32": 23, "33": 22, "34": 21, "35": 20, "36": 19, "37": 18, "38": 17,
+		"41": 25, "42": 26, "43": 27, "44": 28, "45": 29, "46": 30, "47": 31, "48": 32,
+	};
+
+	if (notation === "Universal") return String(fdiToUniversal[num] ?? num);
+
+	if (notation === "Palmer") {
+		const quadrant = num[0];
+		const tooth = num[1];
+		const symbols: Record<string, string> = {
+			"1": "UR", // upper right
+			"2": "UL", // upper left
+			"3": "LL", // lower left
+			"4": "LR", // lower right
+		};
+		return `${tooth}${symbols[quadrant] ?? ""}`;
+	}
+
+	return num;
+}
+
+
+function getToothNotations(fdi: string) {
+	const num = fdi.replace("teeth-", "");
+	const universal = convertFDIToNotation(fdi, "Universal");
+	const palmer = convertFDIToNotation(fdi, "Palmer");
+	return {
+		fdi: num,
+		universal,
+		palmer,
+	};
+}
+
 
 const Teeth = ({
 	name,
@@ -20,6 +83,8 @@ const Teeth = ({
 	selected,
 	onClick,
 	onKeyDown,
+	children
+
 }: TeethProps) => (
 	<g
 		className={`${name} ${selected ? "selected" : ""}`}
@@ -36,7 +101,7 @@ const Teeth = ({
 			transition: "all 0.2s ease",
 		}}
 	>
-		<title>{name}</title>
+		{children}
 		<path
 			stroke="currentColor"
 			strokeLinecap="round"
@@ -65,21 +130,31 @@ const Teeth = ({
 	</g>
 );
 
-export interface OdontogramProps {
-	defaultSelected?: string[];
-	onChange?: (selected: string[]) => void;
-	className?: string;
-	selectedColor?: string;
-	hoverColor?: string;
-}
 
 const Odontogram: React.FC<OdontogramProps> = ({
 	defaultSelected = [],
 	onChange,
 	className = "",
-	selectedColor = "#1E90FF",
-	hoverColor = "#60A5FA",
+	theme = "light",
+	colors = {},
+	notation,
+
 }) => {
+
+	const themeColors =
+		theme === "dark"
+			? {
+				"--dark-blue": "#aab6ff",
+				"--base-blue": "#d0d5f6",
+				"--light-blue": "#5361e6",
+			}
+			: {
+				"--dark-blue": "#3e5edc",
+				"--base-blue": "#8a98be",
+				"--light-blue": "#c6ccf8",
+			};
+
+
 	const [selected, setSelected] = useState<Set<string>>(
 		new Set(defaultSelected),
 	);
@@ -89,13 +164,25 @@ const Odontogram: React.FC<OdontogramProps> = ({
 			setSelected((prev) => {
 				const updated = new Set(prev);
 				updated.has(name) ? updated.delete(name) : updated.add(name);
-				onChange?.(Array.from(updated));
+
+				// build detailed JSON output
+				const details = Array.from(updated).map((id) => {
+					const fdi = id.replace("teeth-", "");
+					const toothBase = fdi.slice(1);
+					const toothData = teethPaths.find((t) => t.name === toothBase);
+					return {
+						id,
+						notations: getToothNotations(id),
+						type: toothData?.type ?? "Unknown",
+					};
+				});
+
+				onChange?.(details);
 				return updated;
 			});
 		},
-		[onChange],
+		[onChange]
 	);
-
 	const handleKeyDown = useCallback(
 		(e: React.KeyboardEvent<SVGGElement>, name: string) => {
 			if (e.key === "Enter" || e.key === " ") {
@@ -116,6 +203,8 @@ const Odontogram: React.FC<OdontogramProps> = ({
 	const renderTeeth = (prefix: string) =>
 		teethPaths.map((tooth) => {
 			const id = `${prefix}${tooth.name}`;
+			const displayName = convertFDIToNotation(id, notation ?? "FDI"); // 🆕
+
 			return (
 				<Teeth
 					key={id}
@@ -124,14 +213,19 @@ const Odontogram: React.FC<OdontogramProps> = ({
 					selected={selected.has(id)}
 					onClick={handleToggle}
 					onKeyDown={handleKeyDown}
-				/>
+				>
+					<title>{displayName}</title>
+				</Teeth>
 			);
 		});
 
+	const finalColors = { ...themeColors, ...mapToCssVars(colors) };
+
 	return (
 		<div
-			className={`OdontogramWrapper ${className}`}
+			className={`Odontogram ${theme === "dark" ? "dark-theme" : ""}`}
 			style={{
+				...finalColors as React.CSSProperties,
 				width: "100%",
 				maxWidth: 300,
 				margin: "0 auto",
@@ -171,5 +265,14 @@ const Odontogram: React.FC<OdontogramProps> = ({
 		</div>
 	);
 };
+
+
+function mapToCssVars(colors: Record<string, string | undefined>) {
+	const cssVars: Record<string, string> = {};
+	if (colors.darkBlue) cssVars["--dark-blue"] = colors.darkBlue;
+	if (colors.baseBlue) cssVars["--base-blue"] = colors.baseBlue;
+	if (colors.lightBlue) cssVars["--light-blue"] = colors.lightBlue;
+	return cssVars;
+}
 
 export default Odontogram;

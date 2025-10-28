@@ -29,6 +29,9 @@ importers:
       '@storybook/addon-links':
         specifier: 8.6.8
         version: 8.6.8(react@18.3.1)(storybook@8.6.8)
+      '@storybook/addon-themes':
+        specifier: ^8.6.8
+        version: 8.6.8(storybook@8.6.8)
       '@storybook/addon-webpack5-compiler-swc':
         specifier: 3.0.0
         version: 3.0.0(webpack@5.98.0(@swc/core@1.11.11)(esbuild@0.25.0))
@@ -1111,6 +1114,11 @@ packages:
 
   '@storybook/addon-outline@8.6.8':
     resolution: {integrity: sha512-Zz+/ctGgp8qbml9yB4D/KrBYaHl51TJ733bfhdCWcs2vGySUDMP+FV0f5AFr6kL2mAO1ECkppBboP8cUvAPslw==}
+    peerDependencies:
+      storybook: ^8.6.8
+
+  '@storybook/addon-themes@8.6.8':
+    resolution: {integrity: sha512-zc4Hr8bQPDMNV+7IbtpZhnbSIWxzV1Ragv0eRDHIuAJkmxYc5QS+J+FSHQa5UYTWjEO6UxUk91x0YV7wpQQSZA==}
     peerDependencies:
       storybook: ^8.6.8
 
@@ -5222,6 +5230,11 @@ snapshots:
   '@storybook/addon-outline@8.6.8(storybook@8.6.8)':
     dependencies:
       '@storybook/global': 5.0.0
+      storybook: 8.6.8
+      ts-dedent: 2.2.0
+
+  '@storybook/addon-themes@8.6.8(storybook@8.6.8)':
+    dependencies:
       storybook: 8.6.8
       ts-dedent: 2.2.0
 

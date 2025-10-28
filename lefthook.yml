@@ -2,7 +2,7 @@ pre-commit:
   parallel: true
   commands:
     lint:
-      run:  git add -u
+      run: git add -u
     typecheck:
       run: pnpm tsc
     build:

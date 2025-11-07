@@ -1,16 +1,35 @@
 import "./styles.css";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { teethPaths } from "./data";
+import { OdontogramTooltip } from "./Tooltip";
 
-interface TeethProps {
+type Placement =
+	| "top"
+	| "top-start"
+	| "top-end"
+	| "right"
+	| "right-start"
+	| "right-end"
+	| "bottom"
+	| "bottom-start"
+	| "bottom-end"
+	| "left"
+	| "left-start"
+	| "left-end";
+
+
+export interface TeethProps {
 	name: string;
 	outlinePath: string;
 	shadowPath: string;
 	lineHighlightPath: string | string[];
 	selected?: boolean;
+	showTooltip?: boolean;
 	onClick?: (name: string) => void;
 	onKeyDown?: (e: React.KeyboardEvent<SVGGElement>, name: string) => void;
 	children?: React.ReactNode;
+	onHover?: (name: string, event: React.MouseEvent, placement?: Placement) => void;
+	onLeave?: () => void;
 }
 
 export interface ToothDetail {
@@ -32,9 +51,17 @@ export interface OdontogramProps {
 	theme: "light" | "dark";
 	colors: Record<string, string>;
 	notation?: "FDI" | "Universal" | "Palmer";
+	tooltip?: {
+		placement?: Placement;
+		margin?: number;
+		content?: React.ReactNode | ((payload?: ToothDetail) => React.ReactNode);
+
+	};
+	showTooltip?: boolean;
+
 }
 
-function convertFDIToNotation(
+export function convertFDIToNotation(
 	fdi: string,
 	notation: "FDI" | "Universal" | "Palmer",
 ) {
@@ -94,7 +121,7 @@ function convertFDIToNotation(
 	return num;
 }
 
-function getToothNotations(fdi: string) {
+export function getToothNotations(fdi: string) {
 	const num = fdi.replace("teeth-", "");
 	const universal = convertFDIToNotation(fdi, "Universal");
 	const palmer = convertFDIToNotation(fdi, "Palmer");
@@ -105,7 +132,7 @@ function getToothNotations(fdi: string) {
 	};
 }
 
-const Teeth = ({
+export const Teeth = ({
 	name,
 	outlinePath,
 	shadowPath,
@@ -113,6 +140,8 @@ const Teeth = ({
 	selected,
 	onClick,
 	onKeyDown,
+	onHover,
+	onLeave,
 	children,
 }: TeethProps) => (
 	<g
@@ -120,6 +149,8 @@ const Teeth = ({
 		tabIndex={0}
 		onClick={() => onClick?.(name)}
 		onKeyDown={(e) => onKeyDown?.(e, name)}
+		onMouseMove={(e) => onHover?.(name, e)}
+		onMouseLeave={onLeave}
 		role="button"
 		aria-pressed={selected}
 		aria-label={`Tooth ${name}`}
@@ -159,30 +190,44 @@ const Teeth = ({
 	</g>
 );
 
-const Odontogram: React.FC<OdontogramProps> = ({
+export const Odontogram: React.FC<OdontogramProps> = ({
 	defaultSelected = [],
 	onChange,
 	className = "",
 	theme = "light",
 	colors = {},
 	notation,
+	tooltip = {
+		margin: 10,
+	},
+	showTooltip = true,
+
 }) => {
 	const themeColors =
 		theme === "dark"
 			? {
-					"--dark-blue": "#aab6ff",
-					"--base-blue": "#d0d5f6",
-					"--light-blue": "#5361e6",
-				}
+				"--dark-blue": "#aab6ff",
+				"--base-blue": "#d0d5f6",
+				"--light-blue": "#5361e6",
+			}
 			: {
-					"--dark-blue": "#3e5edc",
-					"--base-blue": "#8a98be",
-					"--light-blue": "#c6ccf8",
-				};
+				"--dark-blue": "#3e5edc",
+				"--base-blue": "#8a98be",
+				"--light-blue": "#c6ccf8",
+			};
 
 	const [selected, setSelected] = useState<Set<string>>(
 		new Set(defaultSelected),
 	);
+
+	const svgRef = useRef<SVGSVGElement>(null);
+	const tooltipRef = useRef<HTMLDivElement>(null);
+
+	const [tooltipData, setTooltipData] = useState<{
+		active: boolean;
+		position?: { x: number; y: number };
+		payload?: ToothDetail;
+	}>({ active: false });
 
 	const handleToggle = useCallback(
 		(name: string) => {
@@ -225,6 +270,97 @@ const Odontogram: React.FC<OdontogramProps> = ({
 		{ name: "fourth", transform: "scale(-1, -1) translate(-409, -694)" },
 	];
 
+
+	const handleHover = (
+		name: string,
+		e: React.MouseEvent,
+		placement: Placement = "right" // default
+	) => {
+		const target = e.currentTarget as SVGGElement;
+		const path = target.querySelector("path");
+
+		if (!path || !svgRef.current) return;
+
+		const toothBox = path.getBoundingClientRect();
+		const svgBox = svgRef.current.getBoundingClientRect();
+
+		const margin = tooltip?.margin || 10; // distance between tooth and tooltip
+
+		// Compute tooltip position just above or below depending on space
+		let x = toothBox.left
+		let y = toothBox.top
+
+		switch (placement) {
+			case "top":
+				x = toothBox.left + toothBox.width / 2;
+				y = toothBox.top - margin;
+				break;
+			case "top-start":
+				x = toothBox.left;
+				y = toothBox.top - margin;
+				break;
+			case "top-end":
+				x = toothBox.right;
+				y = toothBox.top - margin;
+				break;
+			case "bottom":
+				x = toothBox.left + toothBox.width / 2;
+				y = toothBox.bottom + margin;
+				break;
+			case "bottom-start":
+				x = toothBox.left;
+				y = toothBox.bottom + margin;
+				break;
+			case "bottom-end":
+				x = toothBox.right;
+				y = toothBox.bottom + margin;
+				break;
+			case "left":
+				x = toothBox.left - margin;
+				y = toothBox.top + toothBox.height / 2;
+				break;
+			case "left-start":
+				x = toothBox.left - margin;
+				y = toothBox.top;
+				break;
+			case "left-end":
+				x = toothBox.left - margin;
+				y = toothBox.bottom;
+				break;
+			case "right":
+				x = toothBox.right + margin;
+				y = toothBox.top + toothBox.height / 2;
+				break;
+			case "right-start":
+				x = toothBox.right + margin;
+				y = toothBox.top;
+				break;
+			case "right-end":
+				x = toothBox.right + margin;
+				y = toothBox.bottom;
+				break;
+		}
+
+
+		// If tooltip would go above svg, place it below instead
+		if (y < svgBox.top) {
+			y = toothBox.bottom + margin;
+		}
+
+		setTooltipData({
+			active: true,
+			position: { x, y },
+			payload: {
+				id: name,
+				notations: getToothNotations(name),
+				type: teethPaths.find((t) => t.name === name.replace("teeth-", "").slice(1))
+					?.type ?? "Unknown",
+			},
+		});
+	};
+	const handleLeave = () => setTooltipData((p) => ({ ...p, active: false }));
+
+
 	const renderTeeth = (prefix: string) =>
 		teethPaths.map((tooth) => {
 			const id = `${prefix}${tooth.name}`;
@@ -238,11 +374,14 @@ const Odontogram: React.FC<OdontogramProps> = ({
 					selected={selected.has(id)}
 					onClick={handleToggle}
 					onKeyDown={handleKeyDown}
+					onHover={(name, e) => handleHover(name, e, tooltip?.placement)}
+					onLeave={handleLeave}
 				>
 					<title>{displayName}</title>
 				</Teeth>
 			);
 		});
+
 
 	const finalColors = { ...themeColors, ...mapToCssVars(colors) };
 
@@ -257,9 +396,12 @@ const Odontogram: React.FC<OdontogramProps> = ({
 				display: "flex",
 				justifyContent: "center",
 				alignItems: "center",
+				// isolation: "isolate",
 			}}
 		>
 			<svg
+				ref={svgRef}
+
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
 				viewBox="0 0 409 694"
@@ -287,11 +429,19 @@ const Odontogram: React.FC<OdontogramProps> = ({
 					))}
 				</g>
 			</svg>
+			{showTooltip && (
+				<OdontogramTooltip
+					active={tooltipData.active}
+					position={tooltipData.position}
+					payload={tooltipData.payload}
+					content={tooltip?.content}
+				/>
+			)}
 		</div>
 	);
 };
 
-function mapToCssVars(colors: Record<string, string | undefined>) {
+export function mapToCssVars(colors: Record<string, string | undefined>) {
 	const cssVars: Record<string, string> = {};
 	if (colors.darkBlue) {
 		cssVars["--dark-blue"] = colors.darkBlue;

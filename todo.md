@@ -1,21 +1,21 @@
-- [ ] Add the Odonograph
-- [ ] Add Features like dental notation
-- [ ] add multiple select
+- [x] Add the Odonograph
+- [x] Add Features like dental notation
+- [x] add multiple select
+  
+- [x] Optimize svg
+- [x] Dental Notions 
+- [x] Add Multi-select support
+- [x] Add Tooltip support
 - [ ] Make the component such that it can be used yearly
-- [ ] Add tooltip
 - [ ] Make everything accessible
 - [ ] Add keyboard accessibility
 - [ ] Add Test for keyboard accessibility
 - [ ] Add Callback events 
-- [ ] Add Multi-select support
 
-
-- [ ] Optimize svg
 - [ ] Render the component Docs
 - [ ] Add Validations
 - [ ] Add form usage support
 - [ ] Add Rectangle select and circle selection
-- [ ] Dental Notions 
 
 
 ### Reference 

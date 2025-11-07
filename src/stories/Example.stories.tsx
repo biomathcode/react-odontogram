@@ -65,3 +65,43 @@ Default.args = {
 	colors: {},
 	defaultSelected: ["teeth-11", "teeth-12", "teeth-22"],
 };
+
+
+
+export const WithCustomTooltip = Template.bind({});
+WithCustomTooltip.args = {
+	theme: "light",
+	colors: {},
+	tooltip: {
+		placement: "top",
+		content: (payload) => (
+			<div
+				style={{
+					padding: "8px 12px",
+					borderRadius: "6px",
+					background: "#333",
+					color: "#fff",
+					fontSize: "13px",
+					boxShadow: "0 2px 8px rgba(0,0,0,0.25)",
+				}}
+			>
+				<strong>Tooth #{payload?.notations?.fdi}</strong>
+				<br />
+				Type: {payload?.type}
+			</div>
+		),
+	},
+	defaultSelected: ["teeth-11"],
+};
+WithCustomTooltip.storyName = "Custom Tooltip";
+
+
+export const WithoutTooltip = Template.bind({});
+WithoutTooltip.args = {
+	theme: "light",
+	colors: {},
+	defaultSelected: ["teeth-11", "teeth-21"],
+	showTooltip: false, // 👈 No tooltip prop passed
+};
+WithoutTooltip.storyName = "Without Tooltip";
+

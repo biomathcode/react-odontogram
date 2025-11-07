@@ -56,6 +56,9 @@ export interface OdontogramProps {
 		content?: React.ReactNode | ((payload?: ToothDetail) => React.ReactNode);
 	};
 	showTooltip?: boolean;
+	showHalf?: "upper" | "lower" | "full";
+
+
 }
 
 export function convertFDIToNotation(
@@ -198,6 +201,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		margin: 10,
 	},
 	showTooltip = true,
+	showHalf = 'full',
 
 }) => {
 	const themeColors =
@@ -260,12 +264,25 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		[handleToggle],
 	);
 
-	const quadrants = [
-		{ name: "first", transform: "" },
-		{ name: "second", transform: "scale(-1, 1) translate(-409, 0)" },
-		{ name: "third", transform: "scale(1, -1) translate(0, -694)" },
-		{ name: "fourth", transform: "scale(-1, -1) translate(-409, -694)" },
-	];
+	const quadrants: Array<{
+		name: "first" | "second" | "third" | "fourth";
+		transform: string;
+		label: string;
+		position: { x: number; y: number };
+	}> = [
+			{ name: "first", transform: "", label: "Upper Right", position: { x: 100, y: 30 } },
+			{ name: "second", transform: "scale(-1, 1) translate(-409, 0)", label: "Upper Left", position: { x: 309, y: 30 } },
+			{ name: "third", transform: "scale(1, -1) translate(0, -694)", label: "Lower Right", position: { x: 100, y: 664 } },
+			{ name: "fourth", transform: "scale(-1, -1) translate(-409, -694)", label: "Lower Left", position: { x: 309, y: 664 } },
+		];
+
+	let visibleQuadrants = quadrants;
+	if (showHalf === "upper") {
+		visibleQuadrants = quadrants.slice(0, 2);
+	} else if (showHalf === "lower") {
+		visibleQuadrants = quadrants.slice(2);
+	}
+
 
 
 	const handleHover = (
@@ -398,10 +415,9 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		>
 			<svg
 				ref={svgRef}
-
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
-				viewBox="0 0 409 694"
+				viewBox={showHalf === "full" ? "0 0 409 694" : showHalf === 'upper' ? "0 0 409 347" : "0 200 409 694"}
 				className="Odontogram"
 				style={{
 					width: "100%",
@@ -410,21 +426,13 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 					touchAction: "manipulation",
 				}}
 			>
-				<g name="upper">
-					{quadrants.slice(0, 2).map(({ name, transform }, index) => (
-						<g key={name} name={name} transform={transform}>
-							{renderTeeth(`teeth-${index + 1}`)}
-						</g>
-					))}
-				</g>
 
-				<g name="lower">
-					{quadrants.slice(2).map(({ name, transform }, index) => (
-						<g key={name} name={name} transform={transform}>
-							{renderTeeth(`teeth-${index + 3}`)}
-						</g>
-					))}
-				</g>
+				{visibleQuadrants.map(({ name, transform, label, position }, index) => (
+					<g key={name} name={name} transform={transform}>
+						{renderTeeth(`teeth-${index + 1}`)}
+
+					</g>
+				))}
 			</svg>
 			{showTooltip && (
 				<OdontogramTooltip

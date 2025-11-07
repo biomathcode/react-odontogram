@@ -105,3 +105,24 @@ WithoutTooltip.args = {
 };
 WithoutTooltip.storyName = "Without Tooltip";
 
+
+export const UpperHalf = Template.bind({});
+UpperHalf.args = {
+	theme: "light",
+	colors: {},
+	defaultSelected: ["teeth-11", "teeth-21"],
+	showTooltip: true, // 👈 No tooltip prop passed
+	showHalf: 'upper',
+
+};
+UpperHalf.storyName = "UpperHalf";
+
+export const LowerHalf = Template.bind({});
+LowerHalf.args = {
+	theme: "light",
+	colors: {},
+	defaultSelected: ["teeth-11", "teeth-21"],
+	showTooltip: true, // 👈 No tooltip prop passed
+	showHalf: 'lower',
+};
+LowerHalf.storyName = "LowerHalf";

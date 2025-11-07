@@ -229,15 +229,15 @@ export const Odontogram: FC<OdontogramProps> = ({
 	const themeColors =
 		theme === "dark"
 			? {
-				"--dark-blue": "#aab6ff",
-				"--base-blue": "#d0d5f6",
-				"--light-blue": "#5361e6",
-			}
+					"--dark-blue": "#aab6ff",
+					"--base-blue": "#d0d5f6",
+					"--light-blue": "#5361e6",
+				}
 			: {
-				"--dark-blue": "#3e5edc",
-				"--base-blue": "#8a98be",
-				"--light-blue": "#c6ccf8",
-			};
+					"--dark-blue": "#3e5edc",
+					"--base-blue": "#8a98be",
+					"--light-blue": "#c6ccf8",
+				};
 
 	const [selected, setSelected] = useState<Set<string>>(
 		new Set(defaultSelected),
@@ -292,31 +292,31 @@ export const Odontogram: FC<OdontogramProps> = ({
 		label: string;
 		position: { x: number; y: number };
 	}> = [
-			{
-				name: "first",
-				transform: "",
-				label: "Upper Right",
-				position: { x: 100, y: 30 },
-			},
-			{
-				name: "second",
-				transform: "scale(-1, 1) translate(-409, 0)",
-				label: "Upper Left",
-				position: { x: 309, y: 30 },
-			},
-			{
-				name: "third",
-				transform: "scale(1, -1) translate(0, -694)",
-				label: "Lower Right",
-				position: { x: 100, y: 664 },
-			},
-			{
-				name: "fourth",
-				transform: "scale(-1, -1) translate(-409, -694)",
-				label: "Lower Left",
-				position: { x: 309, y: 664 },
-			},
-		];
+		{
+			name: "first",
+			transform: "",
+			label: "Upper Right",
+			position: { x: 100, y: 30 },
+		},
+		{
+			name: "second",
+			transform: "scale(-1, 1) translate(-409, 0)",
+			label: "Upper Left",
+			position: { x: 309, y: 30 },
+		},
+		{
+			name: "third",
+			transform: "scale(1, -1) translate(0, -694)",
+			label: "Lower Right",
+			position: { x: 100, y: 664 },
+		},
+		{
+			name: "fourth",
+			transform: "scale(-1, -1) translate(-409, -694)",
+			label: "Lower Left",
+			position: { x: 309, y: 664 },
+		},
+	];
 
 	let visibleQuadrants = quadrants;
 	if (showHalf === "upper") {

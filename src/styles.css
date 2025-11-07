@@ -72,14 +72,12 @@ g[class^="teeth-"]:hover path:nth-of-type(2) {
 	opacity: 1;
 }
 
-
-
 .odontogram-tooltip {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  backdrop-filter: blur(4px);
+	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	backdrop-filter: blur(4px);
 }
 
 .dark-theme .odontogram-tooltip {
-  background: rgba(255, 255, 255, 0.95);
-  color: #000;
+	background: rgba(255, 255, 255, 0.95);
+	color: #000;
 }

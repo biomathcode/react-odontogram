@@ -66,8 +66,6 @@ Default.args = {
 	defaultSelected: ["teeth-11", "teeth-12", "teeth-22"],
 };
 
-
-
 export const WithCustomTooltip = Template.bind({});
 WithCustomTooltip.args = {
 	theme: "light",
@@ -95,7 +93,6 @@ WithCustomTooltip.args = {
 };
 WithCustomTooltip.storyName = "Custom Tooltip";
 
-
 export const WithoutTooltip = Template.bind({});
 WithoutTooltip.args = {
 	theme: "light",
@@ -105,15 +102,13 @@ WithoutTooltip.args = {
 };
 WithoutTooltip.storyName = "Without Tooltip";
 
-
 export const UpperHalf = Template.bind({});
 UpperHalf.args = {
 	theme: "light",
 	colors: {},
 	defaultSelected: ["teeth-11", "teeth-21"],
 	showTooltip: true, // 👈 No tooltip prop passed
-	showHalf: 'upper',
-
+	showHalf: "upper",
 };
 UpperHalf.storyName = "UpperHalf";
 
@@ -123,6 +118,6 @@ LowerHalf.args = {
 	colors: {},
 	defaultSelected: ["teeth-11", "teeth-21"],
 	showTooltip: true, // 👈 No tooltip prop passed
-	showHalf: 'lower',
+	showHalf: "lower",
 };
 LowerHalf.storyName = "LowerHalf";

@@ -1,7 +1,16 @@
 import "./styles.css";
-import { useCallback, useRef, useState } from "react";
-import { teethPaths } from "./data";
+import {
+	type CSSProperties,
+	type FC,
+	type KeyboardEvent,
+	type MouseEvent,
+	type ReactNode,
+	useCallback,
+	useRef,
+	useState,
+} from "react";
 import { OdontogramTooltip } from "./Tooltip";
+import { teethPaths } from "./data";
 
 type Placement =
 	| "top"
@@ -17,6 +26,23 @@ type Placement =
 	| "left-start"
 	| "left-end";
 
+const placements: Record<
+	Placement,
+	(toothBox: DOMRect, margin: number) => { x: number; y: number }
+> = {
+	top: (t, m) => ({ x: t.left + t.width / 2, y: t.top - m }),
+	"top-start": (t, m) => ({ x: t.left, y: t.top - m }),
+	"top-end": (t, m) => ({ x: t.right, y: t.top - m }),
+	bottom: (t, m) => ({ x: t.left + t.width / 2, y: t.bottom + m }),
+	"bottom-start": (t, m) => ({ x: t.left, y: t.bottom + m }),
+	"bottom-end": (t, m) => ({ x: t.right, y: t.bottom + m }),
+	left: (t, m) => ({ x: t.left - m, y: t.top + t.height / 2 }),
+	"left-start": (t, m) => ({ x: t.left - m, y: t.top }),
+	"left-end": (t, m) => ({ x: t.left - m, y: t.bottom }),
+	right: (t, m) => ({ x: t.right + m, y: t.top + t.height / 2 }),
+	"right-start": (t, m) => ({ x: t.right + m, y: t.top }),
+	"right-end": (t, m) => ({ x: t.right + m, y: t.bottom }),
+};
 
 export interface TeethProps {
 	name: string;
@@ -25,9 +51,9 @@ export interface TeethProps {
 	lineHighlightPath: string | string[];
 	selected?: boolean;
 	onClick?: (name: string) => void;
-	onKeyDown?: (e: React.KeyboardEvent<SVGGElement>, name: string) => void;
-	children?: React.ReactNode;
-	onHover?: (name: string, event: React.MouseEvent, placement?: Placement) => void;
+	onKeyDown?: (e: KeyboardEvent<SVGGElement>, name: string) => void;
+	children?: ReactNode;
+	onHover?: (name: string, event: MouseEvent, placement?: Placement) => void;
 	onLeave?: () => void;
 }
 
@@ -57,8 +83,6 @@ export interface OdontogramProps {
 	};
 	showTooltip?: boolean;
 	showHalf?: "upper" | "lower" | "full";
-
-
 }
 
 export function convertFDIToNotation(
@@ -151,7 +175,6 @@ export const Teeth = ({
 		onKeyDown={(e) => onKeyDown?.(e, name)}
 		onMouseMove={(e) => onHover?.(name, e)}
 		onMouseLeave={onLeave}
-		role="button"
 		aria-pressed={selected}
 		aria-label={`Tooth ${name}`}
 		style={{
@@ -170,9 +193,9 @@ export const Teeth = ({
 		/>
 		<path fill="currentColor" d={shadowPath} />
 		{Array.isArray(lineHighlightPath) ? (
-			lineHighlightPath.map((d, i) => (
+			lineHighlightPath.map((d) => (
 				<path
-					key={i}
+					key={`${d}`}
 					stroke="currentColor"
 					strokeLinecap="round"
 					strokeLinejoin="round"
@@ -190,7 +213,7 @@ export const Teeth = ({
 	</g>
 );
 
-export const Odontogram: React.FC<OdontogramProps> = ({
+export const Odontogram: FC<OdontogramProps> = ({
 	defaultSelected = [],
 	onChange,
 	className = "",
@@ -201,8 +224,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		margin: 10,
 	},
 	showTooltip = true,
-	showHalf = 'full',
-
+	showHalf = "full",
 }) => {
 	const themeColors =
 		theme === "dark"
@@ -222,7 +244,7 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 	);
 
 	const svgRef = useRef<SVGSVGElement>(null);
-	const tooltipRef = useRef<HTMLDivElement>(null);
+	const _tooltipRef = useRef<HTMLDivElement>(null);
 
 	const [tooltipData, setTooltipData] = useState<{
 		active: boolean;
@@ -270,10 +292,30 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		label: string;
 		position: { x: number; y: number };
 	}> = [
-			{ name: "first", transform: "", label: "Upper Right", position: { x: 100, y: 30 } },
-			{ name: "second", transform: "scale(-1, 1) translate(-409, 0)", label: "Upper Left", position: { x: 309, y: 30 } },
-			{ name: "third", transform: "scale(1, -1) translate(0, -694)", label: "Lower Right", position: { x: 100, y: 664 } },
-			{ name: "fourth", transform: "scale(-1, -1) translate(-409, -694)", label: "Lower Left", position: { x: 309, y: 664 } },
+			{
+				name: "first",
+				transform: "",
+				label: "Upper Right",
+				position: { x: 100, y: 30 },
+			},
+			{
+				name: "second",
+				transform: "scale(-1, 1) translate(-409, 0)",
+				label: "Upper Left",
+				position: { x: 309, y: 30 },
+			},
+			{
+				name: "third",
+				transform: "scale(1, -1) translate(0, -694)",
+				label: "Lower Right",
+				position: { x: 100, y: 664 },
+			},
+			{
+				name: "fourth",
+				transform: "scale(-1, -1) translate(-409, -694)",
+				label: "Lower Left",
+				position: { x: 309, y: 664 },
+			},
 		];
 
 	let visibleQuadrants = quadrants;
@@ -283,17 +325,17 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		visibleQuadrants = quadrants.slice(2);
 	}
 
-
-
 	const handleHover = (
 		name: string,
 		e: React.MouseEvent,
-		placement: Placement = "right" // default
+		placement: Placement = "right", // default
 	) => {
 		const target = e.currentTarget as SVGGElement;
 		const path = target.querySelector("path");
 
-		if (!path || !svgRef.current) return;
+		if (!(path && svgRef.current)) {
+			return;
+		}
 
 		const toothBox = path.getBoundingClientRect();
 		const svgBox = svgRef.current.getBoundingClientRect();
@@ -301,79 +343,26 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 		const margin = tooltip?.margin || 10; // distance between tooth and tooltip
 
 		// Compute tooltip position just above or below depending on space
-		let x = toothBox.left
-		let y = toothBox.top
 
-		switch (placement) {
-			case "top":
-				x = toothBox.left + toothBox.width / 2;
-				y = toothBox.top - margin;
-				break;
-			case "top-start":
-				x = toothBox.left;
-				y = toothBox.top - margin;
-				break;
-			case "top-end":
-				x = toothBox.right;
-				y = toothBox.top - margin;
-				break;
-			case "bottom":
-				x = toothBox.left + toothBox.width / 2;
-				y = toothBox.bottom + margin;
-				break;
-			case "bottom-start":
-				x = toothBox.left;
-				y = toothBox.bottom + margin;
-				break;
-			case "bottom-end":
-				x = toothBox.right;
-				y = toothBox.bottom + margin;
-				break;
-			case "left":
-				x = toothBox.left - margin;
-				y = toothBox.top + toothBox.height / 2;
-				break;
-			case "left-start":
-				x = toothBox.left - margin;
-				y = toothBox.top;
-				break;
-			case "left-end":
-				x = toothBox.left - margin;
-				y = toothBox.bottom;
-				break;
-			case "right":
-				x = toothBox.right + margin;
-				y = toothBox.top + toothBox.height / 2;
-				break;
-			case "right-start":
-				x = toothBox.right + margin;
-				y = toothBox.top;
-				break;
-			case "right-end":
-				x = toothBox.right + margin;
-				y = toothBox.bottom;
-				break;
-		}
+		const { x, y } =
+			placements[placement]?.(toothBox, margin) ??
+			placements.right(toothBox, margin);
 
-
-		// If tooltip would go above svg, place it below instead
-		if (y < svgBox.top) {
-			y = toothBox.bottom + margin;
-		}
+		const safeY = y < svgBox.top ? toothBox.bottom + margin : y;
 
 		setTooltipData({
 			active: true,
-			position: { x, y },
+			position: { x, y: safeY },
 			payload: {
 				id: name,
 				notations: getToothNotations(name),
-				type: teethPaths.find((t) => t.name === name.replace("teeth-", "").slice(1))
-					?.type ?? "Unknown",
+				type:
+					teethPaths.find((t) => t.name === name.replace("teeth-", "").slice(1))
+						?.type ?? "Unknown",
 			},
 		});
 	};
 	const handleLeave = () => setTooltipData((p) => ({ ...p, active: false }));
-
 
 	const renderTeeth = (prefix: string) =>
 		teethPaths.map((tooth) => {
@@ -396,14 +385,13 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 			);
 		});
 
-
 	const finalColors = { ...themeColors, ...mapToCssVars(colors) };
 
 	return (
 		<div
 			className={`Odontogram ${theme === "dark" ? "dark-theme" : ""}`}
 			style={{
-				...(finalColors as React.CSSProperties),
+				...(finalColors as CSSProperties),
 				width: "100%",
 				maxWidth: 300,
 				margin: "0 auto",
@@ -417,7 +405,13 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 				ref={svgRef}
 				xmlns="http://www.w3.org/2000/svg"
 				fill="none"
-				viewBox={showHalf === "full" ? "0 0 409 694" : showHalf === 'upper' ? "0 0 409 347" : "0 200 409 694"}
+				viewBox={
+					showHalf === "full"
+						? "0 0 409 694"
+						: showHalf === "upper"
+							? "0 0 409 347"
+							: "0 200 409 694"
+				}
 				className="Odontogram"
 				style={{
 					width: "100%",
@@ -426,11 +420,10 @@ export const Odontogram: React.FC<OdontogramProps> = ({
 					touchAction: "manipulation",
 				}}
 			>
-
+				<title>Odontogram</title>
 				{visibleQuadrants.map(({ name, transform, label, position }, index) => (
 					<g key={name} name={name} transform={transform}>
 						{renderTeeth(`teeth-${index + 1}`)}
-
 					</g>
 				))}
 			</svg>

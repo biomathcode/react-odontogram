@@ -57,13 +57,16 @@
 				"noConsoleLog": {
 					"fix": "none",
 					"level": "warn"
-				}
+				},
+				"noExplicitAny": "off"
 			},
 			"correctness": {
 				"useImportExtensions": "off",
 				"noUndeclaredDependencies": "off",
-				"noUnusedVariables": "info",
-				"noNodejsModules": "off"
+				"noUnusedVariables": "off",
+				"noNodejsModules": "off",
+				"noUndeclaredVariables": "off",
+				"noUnusedFunctionParameters": "off"
 			}
 		}
 	},

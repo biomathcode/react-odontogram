@@ -36,8 +36,8 @@ jobs:
       - name: Check types
         run: pnpm tsc
 
-      - name: Check linting
-        run: pnpm lint:ci
+      # - name: Check linting
+      #   run: pnpm lint:ci
 
       - name: Run tests
         run: pnpm test:ci

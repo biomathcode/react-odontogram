@@ -7,6 +7,7 @@
 [![npm version](https://img.shields.io/npm/v/react-odontogram?color=blue\&label=npm)](https://www.npmjs.com/package/react-odontogram)
 [![npm downloads](https://img.shields.io/npm/dm/react-odontogram?color=green\&label=downloads)](https://www.npmjs.com/package/react-odontogram)
 [![Storybook](https://img.shields.io/badge/Storybook-Demo-orange)](https://biomathcode.github.io/react-odontogram)
+[![codecov](https://codecov.io/gh/biomathcode/react-odontogram/branch/main/graph/badge.svg?token=)](https://codecov.io/gh/biomathcode/react-odontogram)
 
 A modern, interactive **React Odontogram** component for dental chart visualization and data collection.
 Built with SVG and React hooks — fully customizable, accessible, and designed for clinical or academic applications.

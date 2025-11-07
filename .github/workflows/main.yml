@@ -39,8 +39,13 @@ jobs:
       # - name: Check linting
       #   run: pnpm lint:ci
 
-      - name: Run tests
-        run: pnpm test:ci
+      - name: Run tests with coverage
+        run: pnpm test:coverage
+
+      - name: Upload results to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
       - name: Build storybook
         run: pnpm storybook:build

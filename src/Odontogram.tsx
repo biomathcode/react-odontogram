@@ -24,7 +24,6 @@ export interface TeethProps {
 	shadowPath: string;
 	lineHighlightPath: string | string[];
 	selected?: boolean;
-	showTooltip?: boolean;
 	onClick?: (name: string) => void;
 	onKeyDown?: (e: React.KeyboardEvent<SVGGElement>, name: string) => void;
 	children?: React.ReactNode;
@@ -55,10 +54,8 @@ export interface OdontogramProps {
 		placement?: Placement;
 		margin?: number;
 		content?: React.ReactNode | ((payload?: ToothDetail) => React.ReactNode);
-
 	};
 	showTooltip?: boolean;
-
 }
 
 export function convertFDIToNotation(

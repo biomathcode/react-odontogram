@@ -287,6 +287,9 @@ export const Odontogram: FC<OdontogramProps> = ({
         alignItems: "center",
         // isolation: "isolate",
       }}
+      role="listbox"
+      aria-label="Odontogram"
+      aria-multiselectable="true"
     >
       <svg
         ref={svgRef}
@@ -309,7 +312,13 @@ export const Odontogram: FC<OdontogramProps> = ({
       >
         <title>Odontogram</title>
         {visibleQuadrants.map(({ name, transform, label, position }, index) => (
-          <g key={name} name={name} transform={transform}>
+          <g
+            role="group"
+            aria-label={label}
+            key={name}
+            name={name}
+            transform={transform}
+          >
             {renderTeeth(`teeth-${index + 1}`)}
           </g>
         ))}

@@ -20,6 +20,9 @@ importers:
       '@ryansonshine/cz-conventional-changelog':
         specifier: 3.3.4
         version: 3.3.4(@types/node@22.13.11)(typescript@5.8.2)
+      '@storybook/addon-a11y':
+        specifier: ^8.6.8
+        version: 8.6.8(storybook@8.6.8)
       '@storybook/addon-essentials':
         specifier: 8.6.8
         version: 8.6.8(@types/react@18.3.13)(storybook@8.6.8)
@@ -1063,6 +1066,11 @@ packages:
     resolution: {integrity: sha512-tlqY9xq5ukxTUZBmoOp+m61cqwQD5pHJtFY3Mn8CA8ps6yghLH/Hw8UPdqg4OLmFW3IFlcXnQNmo/dh8HzXYIQ==}
     engines: {node: '>=18'}
 
+  '@storybook/addon-a11y@8.6.8':
+    resolution: {integrity: sha512-luAo0vlei7oBEy4RlP9S7UbOCgtYxMCaL0OvzLxT4oPtCmAx2at6xpVseFtWVLT/hC+uZBg35grXtw2nfrgNfA==}
+    peerDependencies:
+      storybook: ^8.6.8
+
   '@storybook/addon-actions@8.6.8':
     resolution: {integrity: sha512-ZTlbWMTosU6kyBeJmZUA3gsMl5iiztAJ2+hE/KhxBTdEpPl2xVWxmkv8iLFmmic6MW4WIvCzVg5Qth+rJlFMzw==}
     peerDependencies:
@@ -1702,6 +1710,10 @@ packages:
   available-typed-arrays@1.0.7:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
+
+  axe-core@4.11.0:
+    resolution: {integrity: sha512-ilYanEU8vxxBexpJd8cWM4ElSQq4QctCLKih0TSfjIfCQTeyH/6zVrmIJfLPrKTKJRbiG+cfnZbQIjAlJmF1jQ==}
+    engines: {node: '>=4'}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -5147,6 +5159,14 @@ snapshots:
 
   '@sindresorhus/merge-streams@4.0.0': {}
 
+  '@storybook/addon-a11y@8.6.8(storybook@8.6.8)':
+    dependencies:
+      '@storybook/addon-highlight': 8.6.8(storybook@8.6.8)
+      '@storybook/global': 5.0.0
+      '@storybook/test': 8.6.8(storybook@8.6.8)
+      axe-core: 4.11.0
+      storybook: 8.6.8
+
   '@storybook/addon-actions@8.6.8(storybook@8.6.8)':
     dependencies:
       '@storybook/global': 5.0.0
@@ -5919,6 +5939,8 @@ snapshots:
   available-typed-arrays@1.0.7:
     dependencies:
       possible-typed-array-names: 1.1.0
+
+  axe-core@4.11.0: {}
 
   balanced-match@1.0.2: {}
 

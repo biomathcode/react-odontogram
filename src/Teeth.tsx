@@ -19,7 +19,8 @@ export const Teeth = ({
     onKeyDown={(e) => onKeyDown?.(e, name)}
     onMouseMove={(e) => onHover?.(name, e)}
     onMouseLeave={onLeave}
-    aria-pressed={selected}
+    role="option"
+    aria-selected={selected}
     aria-label={`Tooth ${name}`}
     style={{
       cursor: "pointer",

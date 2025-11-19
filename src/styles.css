@@ -81,3 +81,10 @@ g[class^="teeth-"]:hover path:nth-of-type(2) {
 	background: rgba(255, 255, 255, 0.95);
 	color: #000;
 }
+
+
+ 
+
+.Odontogram g[role="option"]:focus-visible {
+outline: 4px solid var(--dark-blue) !important;
+}

@@ -65,6 +65,7 @@
 		"@biomejs/biome": "1.9.4",
 		"@ryansonshine/commitizen": "4.2.8",
 		"@ryansonshine/cz-conventional-changelog": "3.3.4",
+		"@storybook/addon-a11y": "^8.6.8",
 		"@storybook/addon-essentials": "8.6.8",
 		"@storybook/addon-interactions": "8.6.8",
 		"@storybook/addon-links": "8.6.8",

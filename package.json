@@ -1,7 +1,7 @@
 {
 	"name": "react-odontogram",
 	"description": "dental chart for selecting teeth",
-	"version": "0.2.3",
+	"version": "0.3.0",
 	"author": "Pratik Sharma <sharma.pratik2016@gmail.com>",
 	"license": "MIT",
 	"keywords": [

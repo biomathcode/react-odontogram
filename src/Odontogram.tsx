@@ -112,6 +112,7 @@ export const Odontogram: FC<OdontogramProps> = ({
   },
   showTooltip = true,
   showHalf = "full",
+  name,
 }) => {
   const themeColors =
     theme === "dark"
@@ -291,6 +292,11 @@ export const Odontogram: FC<OdontogramProps> = ({
       aria-label="Odontogram"
       aria-multiselectable="true"
     >
+      <input
+        type="hidden"
+        name={name ?? "teeth"}
+        value={JSON.stringify(Array.from(selected))}
+      />
       <svg
         ref={svgRef}
         xmlns="http://www.w3.org/2000/svg"

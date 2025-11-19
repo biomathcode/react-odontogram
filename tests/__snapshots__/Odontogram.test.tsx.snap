@@ -9,6 +9,11 @@ exports[`Odontogram Component Snapshots > renders dark theme correctly 1`] = `
     role="listbox"
     style="--dark-blue: #222222; --base-blue: #444444; --light-blue: #666666; width: 100%; max-width: 300px; margin: 0px auto; display: flex; justify-content: center; align-items: center;"
   >
+    <input
+      name="teeth"
+      type="hidden"
+      value="[]"
+    />
     <svg
       class="Odontogram"
       fill="none"
@@ -1029,6 +1034,11 @@ exports[`Odontogram Component Snapshots > renders full odontogram correctly 1`] 
     role="listbox"
     style="--dark-blue: #0000ff; --base-blue: #8888ff; --light-blue: #ccccff; width: 100%; max-width: 300px; margin: 0px auto; display: flex; justify-content: center; align-items: center;"
   >
+    <input
+      name="teeth"
+      type="hidden"
+      value="[]"
+    />
     <svg
       class="Odontogram"
       fill="none"
@@ -2049,6 +2059,11 @@ exports[`Odontogram Component Snapshots > renders lower half odontogram 1`] = `
     role="listbox"
     style="--dark-blue: #0000ff; --base-blue: #8888ff; --light-blue: #ccccff; width: 100%; max-width: 300px; margin: 0px auto; display: flex; justify-content: center; align-items: center;"
   >
+    <input
+      name="teeth"
+      type="hidden"
+      value="[]"
+    />
     <svg
       class="Odontogram"
       fill="none"
@@ -2571,6 +2586,11 @@ exports[`Odontogram Component Snapshots > renders upper half odontogram 1`] = `
     role="listbox"
     style="--dark-blue: #0000ff; --base-blue: #8888ff; --light-blue: #ccccff; width: 100%; max-width: 300px; margin: 0px auto; display: flex; justify-content: center; align-items: center;"
   >
+    <input
+      name="teeth"
+      type="hidden"
+      value="[]"
+    />
     <svg
       class="Odontogram"
       fill="none"

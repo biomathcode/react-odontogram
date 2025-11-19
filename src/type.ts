@@ -38,6 +38,7 @@ export interface TeethProps {
 }
 
 export interface OdontogramProps {
+  name?: string;
   defaultSelected?: string[];
   onChange?: (selected: ToothDetail[]) => void;
   className?: string;

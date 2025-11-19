@@ -16,9 +16,9 @@ Built with SVG and React hooks — fully customizable, accessible, and designed 
 
 ## 🖼️ Preview
 
-| Light Mode                                 | Dark Mode                                |
-| ------------------------------------------ | ---------------------------------------- |
-| ![Light preview](/assets/previewlight.png) | ![Dark preview](/assets/previewdark.png) |
+| Light Mode                                                                                                   | Dark Mode                                                                                                  |
+| ------------------------------------------------------------------------------------------------------------ | ---------------------------------------------------------------------------------------------------------- |
+| ![Light preview](https://github.com/biomathcode/react-odontogram/blob/main/assets/previewlight.png?raw=true) | ![Dark preview](https://github.com/biomathcode/react-odontogram/blob/main/assets/previewdark.png?raw=true) |
 
 ---
 

@@ -6,16 +6,8 @@
 - [x] Dental Notions 
 - [x] Add Multi-select support
 - [x] Add Tooltip support
-- [ ] Make the component such that it can be used yearly
-- [ ] Make everything accessible
-- [ ] Add keyboard accessibility
-- [ ] Add Test for keyboard accessibility
-- [ ] Add Callback events 
+- [x] Add Form support
 
-- [ ] Render the component Docs
-- [ ] Add Validations
-- [ ] Add form usage support
-- [ ] Add Rectangle select and circle selection
 
 
 ### Reference 

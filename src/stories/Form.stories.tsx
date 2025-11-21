@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { Meta, StoryFn } from "@storybook/react";
+import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import Odontogram, { getToothNotations } from "..";
 import { ToothDetail } from "../type";
 import { teethPaths } from "../data";

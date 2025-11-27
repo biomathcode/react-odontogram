@@ -54,4 +54,6 @@ export interface OdontogramProps {
   };
   showTooltip?: boolean;
   showHalf?: "upper" | "lower" | "full";
+  maxTeeth?: number;
+
 }

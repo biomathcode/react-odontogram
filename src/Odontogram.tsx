@@ -113,19 +113,21 @@ export const Odontogram: FC<OdontogramProps> = ({
   showTooltip = true,
   showHalf = "full",
   name,
+  maxTeeth = 8,
+
 }) => {
   const themeColors =
     theme === "dark"
       ? {
-          "--dark-blue": "#aab6ff",
-          "--base-blue": "#d0d5f6",
-          "--light-blue": "#5361e6",
-        }
+        "--dark-blue": "#aab6ff",
+        "--base-blue": "#d0d5f6",
+        "--light-blue": "#5361e6",
+      }
       : {
-          "--dark-blue": "#3e5edc",
-          "--base-blue": "#8a98be",
-          "--light-blue": "#c6ccf8",
-        };
+        "--dark-blue": "#3e5edc",
+        "--base-blue": "#8a98be",
+        "--light-blue": "#c6ccf8",
+      };
 
   const [selected, setSelected] = useState<Set<string>>(
     new Set(defaultSelected)
@@ -180,31 +182,31 @@ export const Odontogram: FC<OdontogramProps> = ({
     label: string;
     position: { x: number; y: number };
   }> = [
-    {
-      name: "first",
-      transform: "",
-      label: "Upper Right",
-      position: { x: 100, y: 30 },
-    },
-    {
-      name: "second",
-      transform: "scale(-1, 1) translate(-409, 0)",
-      label: "Upper Left",
-      position: { x: 309, y: 30 },
-    },
-    {
-      name: "third",
-      transform: "scale(1, -1) translate(0, -694)",
-      label: "Lower Right",
-      position: { x: 100, y: 664 },
-    },
-    {
-      name: "fourth",
-      transform: "scale(-1, -1) translate(-409, -694)",
-      label: "Lower Left",
-      position: { x: 309, y: 664 },
-    },
-  ];
+      {
+        name: "first",
+        transform: "",
+        label: "Upper Right",
+        position: { x: 100, y: 30 },
+      },
+      {
+        name: "second",
+        transform: "scale(-1, 1) translate(-409, 0)",
+        label: "Upper Left",
+        position: { x: 309, y: 30 },
+      },
+      {
+        name: "third",
+        transform: "scale(1, -1) translate(0, -694)",
+        label: "Lower Right",
+        position: { x: 100, y: 664 },
+      },
+      {
+        name: "fourth",
+        transform: "scale(-1, -1) translate(-409, -694)",
+        label: "Lower Left",
+        position: { x: 309, y: 664 },
+      },
+    ];
 
   let visibleQuadrants = quadrants;
   if (showHalf === "upper") {
@@ -251,11 +253,15 @@ export const Odontogram: FC<OdontogramProps> = ({
     });
   };
   const handleLeave = () => setTooltipData((p) => ({ ...p, active: false }));
+  const renderTeeth = (prefix: string, maxTeeth?: number) => {
+    // FIXED: use slice() instead of splice()
+    const filteredTeeth = maxTeeth
+      ? teethPaths.slice(0, maxTeeth)
+      : teethPaths;
 
-  const renderTeeth = (prefix: string) =>
-    teethPaths.map((tooth) => {
+    return filteredTeeth.map((tooth) => {
       const id = `${prefix}${tooth.name}`;
-      const displayName = convertFDIToNotation(id, notation ?? "FDI"); // 🆕
+      const displayName = convertFDIToNotation(id, notation ?? "FDI");
 
       return (
         <Teeth
@@ -272,6 +278,7 @@ export const Odontogram: FC<OdontogramProps> = ({
         </Teeth>
       );
     });
+  };
 
   const finalColors = { ...themeColors, ...mapToCssVars(colors) };
 
@@ -305,8 +312,8 @@ export const Odontogram: FC<OdontogramProps> = ({
           showHalf === "full"
             ? "0 0 409 694"
             : showHalf === "upper"
-            ? "0 0 409 347"
-            : "0 347 409 347"
+              ? "0 0 409 347"
+              : "0 347 409 347"
         }
         className="Odontogram"
         style={{
@@ -325,7 +332,7 @@ export const Odontogram: FC<OdontogramProps> = ({
             name={name}
             transform={transform}
           >
-            {renderTeeth(`teeth-${index + 1}`)}
+            {renderTeeth(`teeth-${index + 1}`, maxTeeth)}
           </g>
         ))}
       </svg>

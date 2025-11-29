@@ -3,7 +3,7 @@ name: Publish
 on:
   workflow_dispatch:
   release:
-    types: [published]
+    types: [created]
 
 permissions:
   contents: write # Needed to push to gh-pages
@@ -42,7 +42,10 @@ jobs:
       - name: Deploy Storybook to GitHub Pages
         uses: bitovi/github-actions-storybook-to-github-pages@v1.0.3
         with:
-          path: storybook-static
+          install_command: pnpm install # default: npm ci
+          build_command: pnpm storybook:build # default: npm run build-storybook
+          path: storybook-static # default: dist/storybook
+          checkout: false # default: true
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

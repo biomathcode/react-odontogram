@@ -108,7 +108,8 @@ export const Odontogram: FC<OdontogramProps> = ({
   colors = {},
   notation,
   tooltip = {
-    margin: 10,
+    margin: -10,
+    placement: "top"
   },
   showTooltip = true,
   showHalf = "full",
@@ -233,6 +234,11 @@ export const Odontogram: FC<OdontogramProps> = ({
     const margin = tooltip?.margin || 10; // distance between tooth and tooltip
 
     // Compute tooltip position just above or below depending on space
+
+    console.log(
+      "toothbox box", toothBox,
+      "svgBOx", svgBox
+    )
 
     const { x, y } =
       placements[placement]?.(toothBox, margin) ??

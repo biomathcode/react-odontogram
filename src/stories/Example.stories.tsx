@@ -4,6 +4,7 @@ import Odontogram from "..";
 export default {
   title: "Components/Odontogram",
   component: Odontogram,
+
   parameters: {
     layout: "centered",
     backgrounds: {
@@ -27,6 +28,7 @@ export default {
       control: "object",
     },
     onChange: { action: "changed" },
+
   },
 } as Meta<typeof Odontogram>;
 
@@ -40,9 +42,22 @@ Light.args = {
   onChange: (selected) => {
     alert(JSON.stringify(selected));
   },
+  tooltip: {
+    margin: -10,
+    placement: "top"
+  }
 };
 
-export const Dark = Template.bind({});
+
+
+const DarkTemplate: StoryFn<typeof Odontogram> = (args) =>
+  <div className="dark-template">
+    <Odontogram {...args} />
+  </div>
+  ;
+
+
+export const Dark = DarkTemplate.bind({});
 Dark.args = {
   theme: "dark",
   colors: {

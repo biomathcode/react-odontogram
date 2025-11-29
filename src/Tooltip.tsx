@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type TooltipContentRenderer = (payload?: any) => React.ReactNode;
 
@@ -23,18 +23,22 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
   content,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  const [coords, setCoords] = useState({ left: 0, top: 0 });
 
   useEffect(() => {
-    if (ref.current && position) {
-      const { x, y } = position;
-      ref.current.style.left = `${x + 10}px`;
-      ref.current.style.top = `${y + 10}px`;
-    }
-  }, [position]);
+    if (!ref.current || !position) return;
 
-  if (!(active && payload)) {
-    return null;
-  }
+    const tooltipBox = ref.current.getBoundingClientRect();
+    const { x, y } = position;
+
+    // place tooltip above the hover point
+    const left = x - tooltipBox.width / 2;
+    const top = y - tooltipBox.height - 12; // space for arrow
+
+    setCoords({ left, top });
+  }, [position, content, payload]);
+
+  if (!(active && payload)) return null;
 
   return (
     <div
@@ -43,7 +47,7 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
       style={{
         position: "fixed",
         pointerEvents: "none",
-        background: "rgba(0, 0, 0, 0.75)",
+        background: "rgba(0,0,0,0.85)",
         color: "#fff",
         padding: "6px 10px",
         borderRadius: "6px",
@@ -51,10 +55,15 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
         lineHeight: 1.3,
         whiteSpace: "nowrap",
         zIndex: 1000,
-        transform: "translate(-50%, -100%)",
+
+        left: coords.left,
+        top: coords.top,
+
+        opacity: active ? 1 : 0,
         transition: "opacity 0.15s ease",
       }}
     >
+      {/* tooltip content */}
       {getContent(content, payload) ?? (
         <>
           <div>Tooth: {payload?.notations?.fdi}</div>
@@ -65,6 +74,22 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
           </div>
         </>
       )}
+
+      {/* ARROW */}
+      <div
+        className="odontogram-tooltip-arrow"
+        style={{
+          position: "absolute",
+          bottom: "-6px",
+          left: "50%",
+          transform: "translateX(-50%)",
+          width: 0,
+          height: 0,
+          borderLeft: "6px solid transparent",
+          borderRight: "6px solid transparent",
+          borderTop: "6px solid rgba(0, 0, 0, 0.85)", // arrow color
+        }}
+      />
     </div>
   );
 };

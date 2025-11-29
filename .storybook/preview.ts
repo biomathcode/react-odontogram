@@ -1,11 +1,12 @@
 import { withThemeByClassName } from "@storybook/addon-themes";
 import type { Preview } from "@storybook/react-webpack5";
+import "../src/styles.css";
 
 export const decorators = [
 	withThemeByClassName({
 		themes: {
-			light: "light-theme",
-			dark: "dark-theme",
+			light: "light",
+			dark: "dark",
 		},
 		defaultTheme: "light",
 	}),

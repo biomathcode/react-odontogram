@@ -4,6 +4,22 @@
 	--light-blue: #c6ccf8;
 }
 
+
+
+#storybook-root {
+	width: 100%;
+	height: 100%;
+}
+
+.dark-template {
+	width: 100%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #0b0d1a;
+}
+
 /* 🌙 Dark theme overrides */
 .Odontogram svg.dark-theme {
 	--dark-blue: #aab6ff; /* lighter blue for contrast on dark bg */
@@ -88,3 +104,5 @@ g[class^="teeth-"]:hover path:nth-of-type(2) {
 .Odontogram g[role="option"]:focus-visible {
 outline: 4px solid var(--dark-blue) !important;
 }
+
+

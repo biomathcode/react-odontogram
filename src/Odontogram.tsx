@@ -2,14 +2,23 @@ import "./styles.css";
 import {
   type CSSProperties,
   type FC,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
   useCallback,
   useRef,
   useState,
 } from "react";
+import { Teeth } from "./Teeth";
 import { OdontogramTooltip } from "./Tooltip";
 import { teethPaths } from "./data";
-import type { OdontogramProps, Placement, ToothDetail } from "./type";
-import { Teeth } from "./Teeth";
+import type {
+  Notation,
+  OdontogramColors,
+  OdontogramProps,
+  Placement,
+  ToothDetail,
+} from "./type";
 
 const placements: Record<
   Placement,
@@ -29,10 +38,53 @@ const placements: Record<
   "right-end": (t, m) => ({ x: t.right + m, y: t.bottom }),
 };
 
-export function convertFDIToNotation(
-  fdi: string,
-  notation: "FDI" | "Universal" | "Palmer"
-) {
+const quadrants: Array<{
+  name: "first" | "second" | "third" | "fourth";
+  transform: string;
+  label: string;
+}> = [
+  {
+    name: "first",
+    transform: "",
+    label: "Upper Right",
+  },
+  {
+    name: "second",
+    transform: "scale(-1, 1) translate(-409, 0)",
+    label: "Upper Left",
+  },
+  {
+    name: "third",
+    transform: "scale(1, -1) translate(0, -694)",
+    label: "Lower Right",
+  },
+  {
+    name: "fourth",
+    transform: "scale(-1, -1) translate(-409, -694)",
+    label: "Lower Left",
+  },
+];
+
+const toothTypeByName = new Map(teethPaths.map((tooth) => [tooth.name, tooth.type]));
+
+const getToothType = (id: string) => {
+  const toothName = id.replace("teeth-", "").slice(1);
+  return toothTypeByName.get(toothName) ?? "Unknown";
+};
+
+const clampMaxTeeth = (maxTeeth: number | undefined) => {
+  if (typeof maxTeeth !== "number" || Number.isNaN(maxTeeth)) {
+    return teethPaths.length;
+  }
+
+  return Math.max(0, Math.min(teethPaths.length, Math.floor(maxTeeth)));
+};
+
+type ToothInteractionEvent =
+  | MouseEvent<SVGGElement>
+  | FocusEvent<SVGGElement>;
+
+export function convertFDIToNotation(fdi: string, notation: Notation) {
   const num = fdi.replace("teeth-", "");
 
   const fdiToUniversal: Record<string, number> = {
@@ -75,14 +127,19 @@ export function convertFDIToNotation(
   }
 
   if (notation === "Palmer") {
+    if (num.length < 2) {
+      return num;
+    }
+
     const quadrant = num[0];
     const tooth = num[1];
     const symbols: Record<string, string> = {
-      "1": "UR", // upper right
-      "2": "UL", // upper left
-      "3": "LL", // lower left
-      "4": "LR", // lower right
+      "1": "UR",
+      "2": "UL",
+      "3": "LL",
+      "4": "LR",
     };
+
     return `${tooth}${symbols[quadrant] ?? ""}`;
   }
 
@@ -93,6 +150,7 @@ export function getToothNotations(fdi: string) {
   const num = fdi.replace("teeth-", "");
   const universal = convertFDIToNotation(fdi, "Universal");
   const palmer = convertFDIToNotation(fdi, "Palmer");
+
   return {
     fdi: num,
     universal,
@@ -100,43 +158,46 @@ export function getToothNotations(fdi: string) {
   };
 }
 
+const buildToothDetail = (id: string): ToothDetail => ({
+  id,
+  notations: getToothNotations(id),
+  type: getToothType(id),
+});
+
 export const Odontogram: FC<OdontogramProps> = ({
   defaultSelected = [],
   onChange,
   className = "",
   theme = "light",
   colors = {},
-  notation,
+  notation = "FDI",
   tooltip = {
-    margin: -10,
-    placement: "top"
+    margin: 10,
+    placement: "top",
   },
   showTooltip = true,
   showHalf = "full",
   name,
-  maxTeeth = 8,
-
+  maxTeeth = teethPaths.length,
 }) => {
   const themeColors =
     theme === "dark"
       ? {
-        "--dark-blue": "#aab6ff",
-        "--base-blue": "#d0d5f6",
-        "--light-blue": "#5361e6",
-      }
+          "--dark-blue": "#aab6ff",
+          "--base-blue": "#d0d5f6",
+          "--light-blue": "#5361e6",
+        }
       : {
-        "--dark-blue": "#3e5edc",
-        "--base-blue": "#8a98be",
-        "--light-blue": "#c6ccf8",
-      };
+          "--dark-blue": "#3e5edc",
+          "--base-blue": "#8a98be",
+          "--light-blue": "#c6ccf8",
+        };
 
   const [selected, setSelected] = useState<Set<string>>(
-    new Set(defaultSelected)
+    () => new Set(defaultSelected)
   );
 
   const svgRef = useRef<SVGSVGElement>(null);
-  const _tooltipRef = useRef<HTMLDivElement>(null);
-
   const [tooltipData, setTooltipData] = useState<{
     active: boolean;
     position?: { x: number; y: number };
@@ -144,130 +205,78 @@ export const Odontogram: FC<OdontogramProps> = ({
   }>({ active: false });
 
   const handleToggle = useCallback(
-    (name: string) => {
-      setSelected((prev) => {
-        const updated = new Set(prev);
-        updated.has(name) ? updated.delete(name) : updated.add(name);
+    (id: string) => {
+      setSelected((previous) => {
+        const updated = new Set(previous);
+        if (updated.has(id)) {
+          updated.delete(id);
+        } else {
+          updated.add(id);
+        }
 
-        // build detailed JSON output
-        const details = Array.from(updated).map((id) => {
-          const fdi = id.replace("teeth-", "");
-          const toothBase = fdi.slice(1);
-          const toothData = teethPaths.find((t) => t.name === toothBase);
-          return {
-            id,
-            notations: getToothNotations(id),
-            type: toothData?.type ?? "Unknown",
-          };
-        });
-
-        onChange?.(details);
+        onChange?.(Array.from(updated).map(buildToothDetail));
         return updated;
       });
     },
     [onChange]
   );
+
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent<SVGGElement>, name: string) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        handleToggle(name);
+    (event: KeyboardEvent<SVGGElement>, id: string) => {
+      if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        handleToggle(id);
       }
     },
     [handleToggle]
   );
 
-  const quadrants: Array<{
-    name: "first" | "second" | "third" | "fourth";
-    transform: string;
-    label: string;
-    position: { x: number; y: number };
-  }> = [
-      {
-        name: "first",
-        transform: "",
-        label: "Upper Right",
-        position: { x: 100, y: 30 },
-      },
-      {
-        name: "second",
-        transform: "scale(-1, 1) translate(-409, 0)",
-        label: "Upper Left",
-        position: { x: 309, y: 30 },
-      },
-      {
-        name: "third",
-        transform: "scale(1, -1) translate(0, -694)",
-        label: "Lower Right",
-        position: { x: 100, y: 664 },
-      },
-      {
-        name: "fourth",
-        transform: "scale(-1, -1) translate(-409, -694)",
-        label: "Lower Left",
-        position: { x: 309, y: 664 },
-      },
-    ];
+  const handleHover = useCallback(
+    (
+      id: string,
+      event: ToothInteractionEvent,
+      placement: Placement = "right"
+    ) => {
+      const path = event.currentTarget.querySelector("path");
+      if (!(path && svgRef.current)) {
+        return;
+      }
 
-  let visibleQuadrants = quadrants;
-  if (showHalf === "upper") {
-    visibleQuadrants = quadrants.slice(0, 2);
-  } else if (showHalf === "lower") {
-    visibleQuadrants = quadrants.slice(2);
-  }
+      const toothBox = path.getBoundingClientRect();
+      const svgBox = svgRef.current.getBoundingClientRect();
+      const margin = tooltip.margin ?? 10;
 
-  const handleHover = (
-    name: string,
-    e: React.MouseEvent,
-    placement: Placement = "right" // default
-  ) => {
-    const target = e.currentTarget as SVGGElement;
-    const path = target.querySelector("path");
+      const { x, y } =
+        placements[placement]?.(toothBox, margin) ??
+        placements.right(toothBox, margin);
+      const safeY = y < svgBox.top ? toothBox.bottom + margin : y;
 
-    if (!(path && svgRef.current)) {
-      return;
-    }
+      setTooltipData({
+        active: true,
+        position: { x, y: safeY },
+        payload: buildToothDetail(id),
+      });
+    },
+    [tooltip.margin]
+  );
 
-    const toothBox = path.getBoundingClientRect();
-    const svgBox = svgRef.current.getBoundingClientRect();
+  const handleLeave = useCallback(() => {
+    setTooltipData((previous) => ({ ...previous, active: false }));
+  }, []);
 
-    const margin = tooltip?.margin || 10; // distance between tooth and tooltip
+  const visibleQuadrants =
+    showHalf === "upper"
+      ? quadrants.slice(0, 2)
+      : showHalf === "lower"
+      ? quadrants.slice(2)
+      : quadrants;
 
-    // Compute tooltip position just above or below depending on space
+  const filteredTeeth = teethPaths.slice(0, clampMaxTeeth(maxTeeth));
 
-    console.log(
-      "toothbox box", toothBox,
-      "svgBOx", svgBox
-    )
-
-    const { x, y } =
-      placements[placement]?.(toothBox, margin) ??
-      placements.right(toothBox, margin);
-
-    const safeY = y < svgBox.top ? toothBox.bottom + margin : y;
-
-    setTooltipData({
-      active: true,
-      position: { x, y: safeY },
-      payload: {
-        id: name,
-        notations: getToothNotations(name),
-        type:
-          teethPaths.find((t) => t.name === name.replace("teeth-", "").slice(1))
-            ?.type ?? "Unknown",
-      },
-    });
-  };
-  const handleLeave = () => setTooltipData((p) => ({ ...p, active: false }));
-  const renderTeeth = (prefix: string, maxTeeth?: number) => {
-    // FIXED: use slice() instead of splice()
-    const filteredTeeth = maxTeeth
-      ? teethPaths.slice(0, maxTeeth)
-      : teethPaths;
-
-    return filteredTeeth.map((tooth) => {
+  const renderTeeth = (prefix: string) =>
+    filteredTeeth.map((tooth) => {
       const id = `${prefix}${tooth.name}`;
-      const displayName = convertFDIToNotation(id, notation ?? "FDI");
+      const displayName = convertFDIToNotation(id, notation);
 
       return (
         <Teeth
@@ -277,20 +286,38 @@ export const Odontogram: FC<OdontogramProps> = ({
           selected={selected.has(id)}
           onClick={handleToggle}
           onKeyDown={handleKeyDown}
-          onHover={(name, e) => handleHover(name, e, tooltip?.placement)}
-          onLeave={handleLeave}
+          onHover={
+            showTooltip
+              ? (currentId, event) =>
+                  handleHover(currentId, event, tooltip.placement)
+              : undefined
+          }
+          onFocus={
+            showTooltip
+              ? (currentId, event) =>
+                  handleHover(currentId, event, tooltip.placement)
+              : undefined
+          }
+          onLeave={showTooltip ? handleLeave : undefined}
+          onBlur={showTooltip ? handleLeave : undefined}
         >
           <title>{displayName}</title>
         </Teeth>
       );
     });
+
+  const finalColors = {
+    ...themeColors,
+    ...mapToCssVars(colors),
   };
 
-  const finalColors = { ...themeColors, ...mapToCssVars(colors) };
+  const containerClasses = ["Odontogram", theme === "dark" ? "dark-theme" : "", className]
+    .filter(Boolean)
+    .join(" ");
 
   return (
     <div
-      className={`Odontogram ${theme === "dark" ? "dark-theme" : ""}`}
+      className={containerClasses}
       style={{
         ...(finalColors as CSSProperties),
         width: "100%",
@@ -299,7 +326,6 @@ export const Odontogram: FC<OdontogramProps> = ({
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        // isolation: "isolate",
       }}
       role="listbox"
       aria-label="Odontogram"
@@ -318,8 +344,8 @@ export const Odontogram: FC<OdontogramProps> = ({
           showHalf === "full"
             ? "0 0 409 694"
             : showHalf === "upper"
-              ? "0 0 409 347"
-              : "0 347 409 347"
+            ? "0 0 409 347"
+            : "0 347 409 347"
         }
         className="Odontogram"
         style={{
@@ -330,15 +356,14 @@ export const Odontogram: FC<OdontogramProps> = ({
         }}
       >
         <title>Odontogram</title>
-        {visibleQuadrants.map(({ name, transform, label, position }, index) => (
+        {visibleQuadrants.map(({ name, transform, label }, index) => (
           <g
             role="group"
             aria-label={label}
             key={name}
-            name={name}
             transform={transform}
           >
-            {renderTeeth(`teeth-${index + 1}`, maxTeeth)}
+            {renderTeeth(`teeth-${index + 1}`)}
           </g>
         ))}
       </svg>
@@ -347,15 +372,16 @@ export const Odontogram: FC<OdontogramProps> = ({
           active={tooltipData.active}
           position={tooltipData.position}
           payload={tooltipData.payload}
-          content={tooltip?.content}
+          content={tooltip.content}
         />
       )}
     </div>
   );
 };
 
-export function mapToCssVars(colors: Record<string, string | undefined>) {
+export function mapToCssVars(colors: OdontogramColors) {
   const cssVars: Record<string, string> = {};
+
   if (colors.darkBlue) {
     cssVars["--dark-blue"] = colors.darkBlue;
   }
@@ -365,6 +391,7 @@ export function mapToCssVars(colors: Record<string, string | undefined>) {
   if (colors.lightBlue) {
     cssVars["--light-blue"] = colors.lightBlue;
   }
+
   return cssVars;
 }
 

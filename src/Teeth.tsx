@@ -1,4 +1,4 @@
-import { TeethProps } from "./type";
+import type { TeethProps } from "./type";
 
 export const Teeth = ({
   name,
@@ -9,7 +9,9 @@ export const Teeth = ({
   onClick,
   onKeyDown,
   onHover,
+  onFocus,
   onLeave,
+  onBlur,
   children,
 }: TeethProps) => (
   <g
@@ -17,11 +19,13 @@ export const Teeth = ({
     tabIndex={0}
     onClick={() => onClick?.(name)}
     onKeyDown={(e) => onKeyDown?.(e, name)}
-    onMouseMove={(e) => onHover?.(name, e)}
+    onMouseEnter={(e) => onHover?.(name, e)}
+    onFocus={(e) => onFocus?.(name, e)}
     onMouseLeave={onLeave}
+    onBlur={onBlur}
     role="option"
     aria-selected={selected}
-    aria-label={`Tooth ${name}`}
+    aria-label={`Tooth ${name.replace("teeth-", "")}`}
     style={{
       cursor: "pointer",
       outline: "none",

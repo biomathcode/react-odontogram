@@ -1,5 +1,9 @@
 {
 	"compilerOptions": {
+		"types": [
+			"vitest/globals",
+			"@testing-library/jest-dom"
+		],
 		"esModuleInterop": true,
 		"jsx": "react-jsx",
 		"module": "ESNext",

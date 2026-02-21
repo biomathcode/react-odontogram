@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { Meta, StoryFn } from "@storybook/react-webpack5";
 import Odontogram, { getToothNotations } from "..";
-import { ToothDetail } from "../type";
+import type { ToothDetail } from "../type";
 import { teethPaths } from "../data";
 
 export default {
@@ -46,7 +46,8 @@ const Template: StoryFn<typeof Odontogram> = (args) => {
             id,
             notations: getToothNotations(id),
             type:
-                teethPaths.find((t) => t.name === id.replace("teeth-", ""))?.type ??
+                teethPaths.find((t) => t.name === id.replace("teeth-", "").slice(1))
+                    ?.type ??
                 "Unknown",
         })) ?? []
     );

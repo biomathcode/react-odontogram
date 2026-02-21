@@ -4,8 +4,8 @@ pre-commit:
     lint:
       run: git add -u
     typecheck:
-      run: pnpm tsc
+      run: npx pnpm tsc
     build:
-      run: pnpm build
+      run: npx pnpm build
     test:
-      run: pnpm test:ci
+      run: npx pnpm test:ci

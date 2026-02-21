@@ -1,4 +1,13 @@
-import { type KeyboardEvent, type MouseEvent, type ReactNode } from "react";
+import type {
+  FocusEvent,
+  KeyboardEvent,
+  MouseEvent,
+  ReactNode,
+} from "react";
+
+export type Notation = "FDI" | "Universal" | "Palmer";
+
+export type Theme = "light" | "dark";
 
 export type Placement =
   | "top"
@@ -24,6 +33,14 @@ export interface ToothDetail {
   type: string;
 }
 
+export interface OdontogramColors {
+  darkBlue?: string;
+  baseBlue?: string;
+  lightBlue?: string;
+}
+
+export type TooltipContentRenderer = (payload?: ToothDetail) => ReactNode;
+
 export interface TeethProps {
   name: string;
   outlinePath: string;
@@ -33,8 +50,10 @@ export interface TeethProps {
   onClick?: (name: string) => void;
   onKeyDown?: (e: KeyboardEvent<SVGGElement>, name: string) => void;
   children?: ReactNode;
-  onHover?: (name: string, event: MouseEvent, placement?: Placement) => void;
+  onHover?: (name: string, event: MouseEvent<SVGGElement>) => void;
+  onFocus?: (name: string, event: FocusEvent<SVGGElement>) => void;
   onLeave?: () => void;
+  onBlur?: () => void;
 }
 
 export interface OdontogramProps {
@@ -44,16 +63,15 @@ export interface OdontogramProps {
   className?: string;
   selectedColor?: string;
   hoverColor?: string;
-  theme: "light" | "dark";
-  colors: Record<string, string>;
-  notation?: "FDI" | "Universal" | "Palmer";
+  theme?: Theme;
+  colors?: OdontogramColors;
+  notation?: Notation;
   tooltip?: {
     placement?: Placement;
     margin?: number;
-    content?: React.ReactNode | ((payload?: ToothDetail) => React.ReactNode);
+    content?: ReactNode | TooltipContentRenderer;
   };
   showTooltip?: boolean;
   showHalf?: "upper" | "lower" | "full";
   maxTeeth?: number;
-
 }

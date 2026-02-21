@@ -1,44 +1,64 @@
-import { useEffect, useRef, useState } from "react";
+import { type ReactNode, useEffect, useRef, useState } from "react";
+import type { ToothDetail, TooltipContentRenderer } from "./type";
 
-export type TooltipContentRenderer = (payload?: any) => React.ReactNode;
+const ARROW_OFFSET = 12;
+const VIEWPORT_PADDING = 8;
 
 export interface OdontogramTooltipProps {
   active: boolean;
-  payload?: any;
+  payload?: ToothDetail;
   position?: { x: number; y: number };
-  content?: React.ReactNode | TooltipContentRenderer;
+  content?: ReactNode | TooltipContentRenderer;
 }
 
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
 const getContent = (
-  content: React.ReactNode | TooltipContentRenderer,
-  payload?: any
+  content: ReactNode | TooltipContentRenderer | undefined,
+  payload?: ToothDetail
 ) => {
+  if (!content) {
+    return undefined;
+  }
+
   return typeof content === "function" ? content(payload) : content;
 };
 
-export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
+export function OdontogramTooltip({
   active,
   payload,
   position,
   content,
-}) => {
+}: OdontogramTooltipProps) {
   const ref = useRef<HTMLDivElement>(null);
-  const [coords, setCoords] = useState({ left: 0, top: 0 });
+  const [coords, setCoords] = useState<{ left: number; top: number } | null>(
+    null
+  );
 
   useEffect(() => {
-    if (!ref.current || !position) return;
+    if (!(active && ref.current && position)) {
+      return;
+    }
 
     const tooltipBox = ref.current.getBoundingClientRect();
     const { x, y } = position;
 
-    // place tooltip above the hover point
-    const left = x - tooltipBox.width / 2;
-    const top = y - tooltipBox.height - 12; // space for arrow
+    const maxLeft = Math.max(
+      VIEWPORT_PADDING,
+      window.innerWidth - tooltipBox.width - VIEWPORT_PADDING
+    );
+    const left = clamp(x - tooltipBox.width / 2, VIEWPORT_PADDING, maxLeft);
+
+    const nextTop = y - tooltipBox.height - ARROW_OFFSET;
+    const top = nextTop < VIEWPORT_PADDING ? y + ARROW_OFFSET : nextTop;
 
     setCoords({ left, top });
-  }, [position, content, payload]);
+  }, [active, position, content, payload]);
 
-  if (!(active && payload)) return null;
+  if (!(active && payload)) {
+    return null;
+  }
 
   return (
     <div
@@ -47,35 +67,30 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
       style={{
         position: "fixed",
         pointerEvents: "none",
-        background: "rgba(0,0,0,0.85)",
-        color: "#fff",
+        background: "var(--odontogram-tooltip-bg, rgba(0,0,0,0.85))",
+        color: "var(--odontogram-tooltip-fg, #fff)",
         padding: "6px 10px",
         borderRadius: "6px",
         fontSize: "12px",
         lineHeight: 1.3,
         whiteSpace: "nowrap",
         zIndex: 1000,
-
-        left: coords.left,
-        top: coords.top,
-
-        opacity: active ? 1 : 0,
+        left: coords?.left ?? -9999,
+        top: coords?.top ?? -9999,
+        opacity: coords ? 1 : 0,
         transition: "opacity 0.15s ease",
       }}
     >
-      {/* tooltip content */}
       {getContent(content, payload) ?? (
         <>
-          <div>Tooth: {payload?.notations?.fdi}</div>
-          <div>Type: {payload?.type}</div>
+          <div>Tooth: {payload.notations.fdi}</div>
+          <div>Type: {payload.type}</div>
           <div>
-            Universal: {payload?.notations?.universal}, Palmer:{" "}
-            {payload?.notations?.palmer}
+            Universal: {payload.notations.universal}, Palmer:{" "}
+            {payload.notations.palmer}
           </div>
         </>
       )}
-
-      {/* ARROW */}
       <div
         className="odontogram-tooltip-arrow"
         style={{
@@ -87,9 +102,10 @@ export const OdontogramTooltip: React.FC<OdontogramTooltipProps> = ({
           height: 0,
           borderLeft: "6px solid transparent",
           borderRight: "6px solid transparent",
-          borderTop: "6px solid rgba(0, 0, 0, 0.85)", // arrow color
+          borderTop:
+            "6px solid var(--odontogram-tooltip-bg, rgba(0, 0, 0, 0.85))",
         }}
       />
     </div>
   );
-};
+}

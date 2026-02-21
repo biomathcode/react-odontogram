@@ -49,6 +49,7 @@ yarn add react-odontogram
 
 ```tsx
 import { Odontogram } from "react-odontogram";
+import "react-odontogram/style.css";
 
 export default function App() {
   const handleChange = (selectedTeeth) => {
@@ -129,12 +130,19 @@ Example JSON output:
 
 ## ⚙️ Props
 
-| Prop              | Type                                        | Default | Description                                             |
-| ----------------- | ------------------------------------------- | ------- | ------------------------------------------------------- |
-| `onChange`        | `(selectedTeeth: ToothSelection[]) => void` | —       | Triggered whenever the user selects or deselects teeth. |
-| `initialSelected` | `string[]`                                  | `[]`    | Array of tooth IDs to preselect.                        |
-| `readOnly`        | `boolean`                                   | `false` | Makes the odontogram non-interactive (view-only).       |
-| `className`       | `string`                                    | —       | Optional class for custom styling.                      |
+| Prop | Type | Default | Description |
+| --- | --- | --- | --- |
+| `defaultSelected` | `string[]` | `[]` | Tooth IDs selected on first render. |
+| `onChange` | `(selectedTeeth: ToothSelection[]) => void` | — | Called whenever selection changes. |
+| `name` | `string` | `"teeth"` | Name used for hidden form input. |
+| `className` | `string` | `""` | Additional class for wrapper customization. |
+| `theme` | `"light" \| "dark"` | `"light"` | Applies built-in light/dark palette. |
+| `colors` | `{ darkBlue?: string; baseBlue?: string; lightBlue?: string }` | `{}` | Override palette colors. |
+| `notation` | `"FDI" \| "Universal" \| "Palmer"` | `"FDI"` | Display notation in native tooth titles/tooltips. |
+| `tooltip` | `{ placement?: Placement; margin?: number; content?: ReactNode \| ((payload?: ToothSelection) => ReactNode) }` | `{ placement: "top", margin: 10 }` | Tooltip behavior and custom content renderer. |
+| `showTooltip` | `boolean` | `true` | Enables/disables tooltip rendering. |
+| `showHalf` | `"full" \| "upper" \| "lower"` | `"full"` | Render full chart or only upper/lower arches. |
+| `maxTeeth` | `number` | `8` | Number of teeth per quadrant (for baby/mixed dentition views). |
 
 ---
 
@@ -144,14 +152,8 @@ Each tooth is internally defined in a structured format:
 
 ```ts
 {
-  id: "teeth-21",
-  name: "21",
+  name: "1",
   type: "Central Incisor",
-  notations: {
-    fdi: "21",
-    universal: "9",
-    palmer: "1UL"
-  },
   outlinePath: "...",
   shadowPath: "...",
   lineHighlightPath: "..."
@@ -190,5 +192,3 @@ MIT © [biomathcode](https://github.com/biomathcode)
 ## 💬 Feedback
 
 If this library helps your dental project, please ⭐ the repo or open issues/PRs for enhancements!
-
-

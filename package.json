@@ -1,7 +1,7 @@
 {
   "name": "react-odontogram",
   "description": "dental chart for selecting teeth",
-  "version": "0.4.9",
+  "version": "0.5.0",
   "author": "Pratik Sharma <sharma.pratik2016@gmail.com>",
   "license": "MIT",
   "keywords": [
@@ -30,7 +30,7 @@
     "link:self": "pnpm link --global",
     "prepare": "lefthook install",
     "deploy-storybook": "gh-pages -d storybook-static",
-    "test:coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage"
   },
   "types": "./dist/index.d.ts",
   "exports": {

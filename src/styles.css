@@ -43,10 +43,21 @@
   transition: all ease-in 125ms;
 }
 
+.Odontogram[data-read-only="true"]  {
+pointer-events: none;
+}
+
 .Odontogram svg path:nth-of-type(2) {
   opacity: 0;
   transition: all ease-in 200ms;
 }
+
+.Odontogram svg path[data-colored="true"] {
+  opacity: 1 !important;
+  transition: none;
+}
+
+
 
 .Odontogram g.selected path:nth-of-type(2) {
   fill: var(--light-blue);

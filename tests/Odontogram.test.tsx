@@ -1,11 +1,12 @@
 import "@testing-library/jest-dom/vitest";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import Odontogram, {
+import Odontogram from "../src/Odontogram";
+import {
   convertFDIToNotation,
-  getToothNotations,
   mapToCssVars,
-} from "../src/Odontogram";
+  getToothNotations,
+} from "../src/utils";
 
 describe("Odontogram", () => {
   it("renders all permanent teeth by default", () => {
@@ -14,6 +15,7 @@ describe("Odontogram", () => {
     expect(
       screen.getByRole("listbox", { name: "Odontogram" })
     ).toBeInTheDocument();
+
     expect(screen.getAllByRole("option")).toHaveLength(32);
   });
 
@@ -27,14 +29,17 @@ describe("Odontogram", () => {
 
   it("respects maxTeeth for each quadrant", () => {
     render(<Odontogram maxTeeth={5} />);
-
     expect(screen.getAllByRole("option")).toHaveLength(20);
   });
 
   it("toggles selection and emits detailed onChange payload", () => {
     const onChange = vi.fn();
-    const { container } = render(<Odontogram onChange={onChange} />);
-    const tooth = screen.getByLabelText("Tooth 11");
+
+    const { container } = render(
+      <Odontogram onChange={onChange} readOnly={false} />
+    );
+
+    const tooth = screen.getByRole("option", { name: "Tooth 11" });
 
     fireEvent.click(tooth);
 
@@ -54,16 +59,19 @@ describe("Odontogram", () => {
     const hiddenInput = container.querySelector<HTMLInputElement>(
       "input[type='hidden'][name='teeth']"
     );
+
     expect(hiddenInput?.value).toBe(JSON.stringify(["teeth-11"]));
 
     fireEvent.click(tooth);
+
     expect(onChange).toHaveBeenCalledTimes(2);
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
 
   it("supports keyboard selection with Enter and Space", () => {
     render(<Odontogram />);
-    const tooth = screen.getByLabelText("Tooth 12");
+
+    const tooth = screen.getByRole("option", { name: "Tooth 12" });
 
     fireEvent.keyDown(tooth, { key: "Enter" });
     expect(tooth).toHaveAttribute("aria-selected", "true");
@@ -74,11 +82,12 @@ describe("Odontogram", () => {
 
   it("does not render tooltip when showTooltip is false", () => {
     render(<Odontogram showTooltip={false} />);
-    const tooth = screen.getByLabelText("Tooth 11");
+
+    const tooth = screen.getByRole("option", { name: "Tooth 11" });
 
     fireEvent.mouseEnter(tooth);
 
-    expect(screen.queryByText(/Universal:/)).not.toBeInTheDocument();
+    expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
   });
 });
 

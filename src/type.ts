@@ -9,6 +9,10 @@ export type Notation = "FDI" | "Universal" | "Palmer";
 
 export type Theme = "light" | "dark";
 
+export type ToothInteractionEvent =
+  | MouseEvent<SVGGElement>
+  | FocusEvent<SVGGElement>;
+
 export type Placement =
   | "top"
   | "top-start"
@@ -54,6 +58,13 @@ export interface TeethProps {
   onFocus?: (name: string, event: FocusEvent<SVGGElement>) => void;
   onLeave?: () => void;
   onBlur?: () => void;
+  condition?: {
+    fillColor?: string;
+    outlineColor?: string;
+  };
+  readOnly?: boolean;
+  showLabel?: boolean;
+  label?: string;
 }
 
 export interface OdontogramProps {
@@ -74,4 +85,15 @@ export interface OdontogramProps {
   showTooltip?: boolean;
   showHalf?: "upper" | "lower" | "full";
   maxTeeth?: number;
+  teethConditions?: ToothConditionGroup[];
+  readOnly?: boolean;
+  showLabels?: boolean;
+}
+
+
+export type ToothConditionGroup = {
+  label: string;
+  teeth: string[];
+  outlineColor: string;
+  fillColor: string;
 }

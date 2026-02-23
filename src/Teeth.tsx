@@ -1,11 +1,12 @@
 import type { TeethProps } from "./type";
-
 export const Teeth = ({
   name,
   outlinePath,
   shadowPath,
   lineHighlightPath,
   selected,
+  condition,
+  readOnly,
   onClick,
   onKeyDown,
   onHover,
@@ -13,51 +14,70 @@ export const Teeth = ({
   onLeave,
   onBlur,
   children,
-}: TeethProps) => (
-  <g
-    className={`${name} ${selected ? "selected" : ""}`}
-    tabIndex={0}
-    onClick={() => onClick?.(name)}
-    onKeyDown={(e) => onKeyDown?.(e, name)}
-    onMouseEnter={(e) => onHover?.(name, e)}
-    onFocus={(e) => onFocus?.(name, e)}
-    onMouseLeave={onLeave}
-    onBlur={onBlur}
-    role="option"
-    aria-selected={selected}
-    aria-label={`Tooth ${name.replace("teeth-", "")}`}
-    style={{
-      cursor: "pointer",
-      outline: "none",
-      touchAction: "manipulation",
-      transition: "all 0.2s ease",
-    }}
-  >
-    {children}
-    <path
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      d={outlinePath}
-    />
-    <path fill="currentColor" d={shadowPath} />
-    {Array.isArray(lineHighlightPath) ? (
-      lineHighlightPath.map((d) => (
-        <path
-          key={`${d}`}
-          stroke="currentColor"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d={d}
-        />
-      ))
-    ) : (
+}: TeethProps) => {
+  const strokeColor = condition?.outlineColor ?? "currentColor";
+  const fillColor = condition?.fillColor ?? "currentColor";
+
+  return (
+    <g
+      className={`${name} ${selected ? "selected" : ""}`}
+      tabIndex={readOnly ? -1 : 0}
+      onClick={readOnly ? undefined : () => onClick?.(name)}
+      onKeyDown={readOnly ? undefined : (e) => onKeyDown?.(e, name)}
+      onMouseEnter={onHover ? (e) => onHover(name, e) : undefined}
+      onFocus={onFocus ? (e) => onFocus(name, e) : undefined}
+      onMouseLeave={onLeave}
+      onBlur={onBlur}
+      role="option"
+      aria-label={`Tooth ${name.replace("teeth-", "")}`}
+
+
+      aria-selected={selected}
+      aria-disabled={readOnly}
+      style={{
+        cursor: readOnly ? "default" : "pointer",
+        color: strokeColor,
+      }}
+    >
+      {children}
+
+      {/* outline */}
       <path
-        stroke="currentColor"
+        stroke={strokeColor}
         strokeLinecap="round"
         strokeLinejoin="round"
-        d={lineHighlightPath}
+        d={outlinePath}
       />
-    )}
-  </g>
-);
+
+      {/* fill */}
+      <path
+        fill={fillColor}
+        d={shadowPath}
+        data-colored={condition ? "true" : undefined}
+        style={{ opacity: condition ? 1 : undefined }}
+      />
+
+      {/* highlight lines */}
+      {Array.isArray(lineHighlightPath)
+        ? lineHighlightPath.map((d) => (
+          <path
+            key={d}
+            stroke={strokeColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d={d}
+          />
+        ))
+        : (
+          <path
+            stroke={strokeColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            d={lineHighlightPath}
+          />
+        )}
+
+
+    </g>
+  );
+};

@@ -1,10 +1,14 @@
 {
 	"name": "react-odontogram",
 	"description": "dental chart for selecting teeth",
-	"version": "0.5.3",
+	"version": "0.5.4",
 	"author": "Pratik Sharma <sharma.pratik2016@gmail.com>",
 	"license": "MIT",
-	"keywords": ["odontogram", "react", "dental-chart"],
+	"keywords": [
+		"odontogram",
+		"react",
+		"dental-chart"
+	],
 	"publishConfig": {
 		"access": "public"
 	},
@@ -38,8 +42,13 @@
 		},
 		"./style.css": "./dist/index.css"
 	},
-	"sideEffects": ["*.css", "**/*.css"],
-	"files": ["dist"],
+	"sideEffects": [
+		"*.css",
+		"**/*.css"
+	],
+	"files": [
+		"dist"
+	],
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@ryansonshine/cz-conventional-changelog"

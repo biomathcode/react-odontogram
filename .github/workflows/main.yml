@@ -50,8 +50,5 @@ jobs:
       - name: Build storybook
         run: pnpm storybook:build
 
-      - name: Publish storybook
-        run: pnpm deploy-storybook
-
       - name: Build package
         run: pnpm build

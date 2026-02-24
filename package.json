@@ -30,7 +30,7 @@
     "link:self": "pnpm link --global",
     "prepare": "lefthook install",
     "deploy-storybook": "gh-pages -d storybook-static",
-    "coverage": "vitest run --coverage"
+    "test:coverage": "vitest run --coverage"
   },
   "types": "./dist/index.d.ts",
   "exports": {

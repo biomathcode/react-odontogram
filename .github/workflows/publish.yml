@@ -28,7 +28,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
           registry-url: https://registry.npmjs.org/
@@ -36,9 +36,16 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      - name: Check trusted publishing prerequisites
+        run: |
+          node --version
+          npm --version
+          if [ -n "${NODE_AUTH_TOKEN:-}" ] || [ -n "${NPM_TOKEN:-}" ]; then
+            echo "NODE_AUTH_TOKEN/NPM_TOKEN is set. Remove token auth to use npm trusted publishing."
+            exit 1
+          fi
+
       - name: Build and publish to npm
         run: |
           pnpm build
           npm publish --access public --provenance
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -1,4 +1,5 @@
 import type {
+  CSSProperties,
   FocusEvent,
   KeyboardEvent,
   MouseEvent,
@@ -88,6 +89,8 @@ export interface OdontogramProps {
   teethConditions?: ToothConditionGroup[];
   readOnly?: boolean;
   showLabels?: boolean;
+  layout?: 'circle' | 'square';
+  styles?: CSSProperties;
 }
 
 

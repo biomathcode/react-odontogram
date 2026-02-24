@@ -18,6 +18,11 @@ export default {
             ],
         },
     },
+    args: {
+        styles: {
+            maxWidth: "300px",
+        }
+    },
     argTypes: {
         name: {
             control: "text",

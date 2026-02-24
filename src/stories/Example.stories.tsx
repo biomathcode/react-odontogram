@@ -6,7 +6,6 @@ export default {
   component: Odontogram,
 
   parameters: {
-    layout: "centered",
     backgrounds: {
       default: "light",
       values: [
@@ -14,6 +13,11 @@ export default {
         { name: "dark", value: "#0b0d1a" },
       ],
     },
+  },
+  args: {
+    styles: {
+      maxWidth: '300px',
+    }
   },
   argTypes: {
     theme: {

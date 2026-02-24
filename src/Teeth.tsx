@@ -44,6 +44,7 @@ export const Teeth = ({
       {/* outline */}
       <path
         stroke={strokeColor}
+        strokeWidth={2}
         strokeLinecap="round"
         strokeLinejoin="round"
         d={outlinePath}

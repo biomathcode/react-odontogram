@@ -18,6 +18,11 @@ export default {
       ],
     },
   },
+  args: {
+    styles: {
+      maxWidth: "300px",
+    }
+  },
   argTypes: {
     name: {
       control: "text",
@@ -95,6 +100,7 @@ Form.args = {
   theme: "light",
   colors: {},
   defaultSelected: ["teeth-11", "teeth-12", "teeth-22"],
+
 };
 
 const PureUncontrolledFormTemplate: StoryFn<typeof Odontogram> = (args) => {

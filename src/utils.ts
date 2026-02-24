@@ -49,7 +49,41 @@ export const placements: Record<
 };
 
 
+
+//425, 55 
+
+
 export const quadrants: Array<{
+    name: "first" | "second" | "third" | "fourth";
+    transform: string;
+    label: string;
+}> = [
+        {
+            name: "first",
+            transform: "",
+            label: "Upper Right",
+        },
+        {
+            name: "second",
+            transform: "translate(855, 0) scale(-1, 1) translate(-55,0)",
+            label: "Upper Left",
+        },
+        {
+            name: "third",
+            transform: "scale(1, -1) translate(0, -150)",
+            label: "Lower Right",
+        },
+        {
+            name: "fourth",
+            transform: "translate(855, 0) scale(-1, -1) translate(-55,-150)",
+            label: "Lower Left",
+        },
+    ];
+
+
+
+
+export const oldquadrants: Array<{
     name: "first" | "second" | "third" | "fourth";
     transform: string;
     label: string;

@@ -3,11 +3,10 @@ name: Publish
 on:
   workflow_dispatch:
   release:
-    types: [created]
+    types: [published]
 
 permissions:
-  contents: write # Needed to push to gh-pages
-  pages: write
+  contents: read
   id-token: write
 
 jobs:
@@ -32,6 +31,7 @@ jobs:
           node-version: 20
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml
+          registry-url: https://registry.npmjs.org/
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -39,6 +39,6 @@ jobs:
       - name: Build and publish to npm
         run: |
           pnpm build
-          npm publish --access public
+          npm publish --access public --provenance
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

@@ -60,7 +60,7 @@
 		"node": ">=18.0.0"
 	},
 	"devDependencies": {
-		"@biomejs/biome": "1.9.4",
+		"@biomejs/biome": "2.2.4",
 		"@ryansonshine/commitizen": "4.2.8",
 		"@ryansonshine/cz-conventional-changelog": "3.3.4",
 		"@storybook/addon-a11y": "^10.2.10",

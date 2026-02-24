@@ -1,9 +1,9 @@
 import type {
-  CSSProperties,
-  FocusEvent,
-  KeyboardEvent,
-  MouseEvent,
-  ReactNode,
+	CSSProperties,
+	FocusEvent,
+	KeyboardEvent,
+	MouseEvent,
+	ReactNode,
 } from "react";
 
 export type Notation = "FDI" | "Universal" | "Palmer";
@@ -11,93 +11,92 @@ export type Notation = "FDI" | "Universal" | "Palmer";
 export type Theme = "light" | "dark";
 
 export type ToothInteractionEvent =
-  | MouseEvent<SVGGElement>
-  | FocusEvent<SVGGElement>;
+	| MouseEvent<SVGGElement>
+	| FocusEvent<SVGGElement>;
 
 export type Placement =
-  | "top"
-  | "top-start"
-  | "top-end"
-  | "right"
-  | "right-start"
-  | "right-end"
-  | "bottom"
-  | "bottom-start"
-  | "bottom-end"
-  | "left"
-  | "left-start"
-  | "left-end";
+	| "top"
+	| "top-start"
+	| "top-end"
+	| "right"
+	| "right-start"
+	| "right-end"
+	| "bottom"
+	| "bottom-start"
+	| "bottom-end"
+	| "left"
+	| "left-start"
+	| "left-end";
 
 export interface ToothDetail {
-  id: string;
-  notations: {
-    fdi: string;
-    universal: string;
-    palmer: string;
-  };
-  type: string;
+	id: string;
+	notations: {
+		fdi: string;
+		universal: string;
+		palmer: string;
+	};
+	type: string;
 }
 
 export interface OdontogramColors {
-  darkBlue?: string;
-  baseBlue?: string;
-  lightBlue?: string;
+	darkBlue?: string;
+	baseBlue?: string;
+	lightBlue?: string;
 }
 
 export type TooltipContentRenderer = (payload?: ToothDetail) => ReactNode;
 
 export interface TeethProps {
-  name: string;
-  outlinePath: string;
-  shadowPath: string;
-  lineHighlightPath: string | string[];
-  selected?: boolean;
-  onClick?: (name: string) => void;
-  onKeyDown?: (e: KeyboardEvent<SVGGElement>, name: string) => void;
-  children?: ReactNode;
-  onHover?: (name: string, event: MouseEvent<SVGGElement>) => void;
-  onFocus?: (name: string, event: FocusEvent<SVGGElement>) => void;
-  onLeave?: () => void;
-  onBlur?: () => void;
-  condition?: {
-    fillColor?: string;
-    outlineColor?: string;
-  };
-  readOnly?: boolean;
-  showLabel?: boolean;
-  label?: string;
+	name: string;
+	outlinePath: string;
+	shadowPath: string;
+	lineHighlightPath: string | string[];
+	selected?: boolean;
+	onClick?: (name: string) => void;
+	onKeyDown?: (e: KeyboardEvent<SVGGElement>, name: string) => void;
+	children?: ReactNode;
+	onHover?: (name: string, event: MouseEvent<SVGGElement>) => void;
+	onFocus?: (name: string, event: FocusEvent<SVGGElement>) => void;
+	onLeave?: () => void;
+	onBlur?: () => void;
+	condition?: {
+		fillColor?: string;
+		outlineColor?: string;
+	};
+	readOnly?: boolean;
+	showLabel?: boolean;
+	label?: string;
 }
 
 export interface OdontogramProps {
-  name?: string;
-  defaultSelected?: string[];
-  singleSelect?: boolean;
-  onChange?: (selected: ToothDetail[]) => void;
-  className?: string;
-  selectedColor?: string;
-  hoverColor?: string;
-  theme?: Theme;
-  colors?: OdontogramColors;
-  notation?: Notation;
-  tooltip?: {
-    placement?: Placement;
-    margin?: number;
-    content?: ReactNode | TooltipContentRenderer;
-  };
-  showTooltip?: boolean;
-  showHalf?: "upper" | "lower" | "full";
-  maxTeeth?: number;
-  teethConditions?: ToothConditionGroup[];
-  readOnly?: boolean;
-  showLabels?: boolean;
-  layout?: 'circle' | 'square';
-  styles?: CSSProperties;
+	name?: string;
+	defaultSelected?: string[];
+	singleSelect?: boolean;
+	onChange?: (selected: ToothDetail[]) => void;
+	className?: string;
+	selectedColor?: string;
+	hoverColor?: string;
+	theme?: Theme;
+	colors?: OdontogramColors;
+	notation?: Notation;
+	tooltip?: {
+		placement?: Placement;
+		margin?: number;
+		content?: ReactNode | TooltipContentRenderer;
+	};
+	showTooltip?: boolean;
+	showHalf?: "upper" | "lower" | "full";
+	maxTeeth?: number;
+	teethConditions?: ToothConditionGroup[];
+	readOnly?: boolean;
+	showLabels?: boolean;
+	layout?: "circle" | "square";
+	styles?: CSSProperties;
 }
-
 
 export type ToothConditionGroup = {
-  label: string;
-  teeth: string[];
-  outlineColor: string;
-  fillColor: string;
-}
+	label: string;
+	teeth: string[];
+	outlineColor: string;
+	fillColor: string;
+};

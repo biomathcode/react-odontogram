@@ -21,18 +21,19 @@ export const Teeth = ({
   return (
     <g
       className={`${name} ${selected ? "selected" : ""}`}
-      tabIndex={readOnly ? -1 : 0}
       onClick={readOnly ? undefined : () => onClick?.(name)}
       onKeyDown={readOnly ? undefined : (e) => onKeyDown?.(e, name)}
       onMouseEnter={onHover ? (e) => onHover(name, e) : undefined}
       onFocus={onFocus ? (e) => onFocus(name, e) : undefined}
       onMouseLeave={onLeave}
       onBlur={onBlur}
-      role="option"
-      aria-label={`Tooth ${name.replace("teeth-", "")}`}
+      role={readOnly ? undefined : "option"}
+      aria-selected={readOnly ? undefined : selected}
+      tabIndex={readOnly ? -1 : 0}
+      aria-label={
+        readOnly ? undefined : `Tooth ${name.replace("teeth-", "")}`
+      }
 
-
-      aria-selected={selected}
       aria-disabled={readOnly}
       style={{
         cursor: readOnly ? "default" : "pointer",

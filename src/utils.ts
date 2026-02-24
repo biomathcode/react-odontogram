@@ -1,5 +1,4 @@
-import { Notation, OdontogramColors, Placement } from "./type";
-
+import type { Notation, OdontogramColors, Placement } from "./type";
 
 export function mapToCssVars(colors: OdontogramColors) {
     const cssVars: Record<string, string> = {};
@@ -16,7 +15,6 @@ export function mapToCssVars(colors: OdontogramColors) {
 
     return cssVars;
 }
-
 
 export function getToothNotations(fdi: string) {
     const num = fdi.replace("teeth-", "");
@@ -48,10 +46,7 @@ export const placements: Record<
     "right-end": (t, m) => ({ x: t.right + m, y: t.bottom }),
 };
 
-
-
-//425, 55 
-
+//425, 55
 
 export const quadrants: Array<{
     name: "first" | "second" | "third" | "fourth";
@@ -65,7 +60,7 @@ export const quadrants: Array<{
         },
         {
             name: "second",
-            transform: "translate(855, 0) scale(-1, 1) translate(-55,0)",
+            transform: "translate(840, 0) scale(-1, 1) translate(-55,0)",
             label: "Upper Left",
         },
         {
@@ -75,13 +70,10 @@ export const quadrants: Array<{
         },
         {
             name: "fourth",
-            transform: "translate(855, 0) scale(-1, -1) translate(-55,-150)",
+            transform: "translate(840, 0) scale(-1, -1) translate(-55,-150)",
             label: "Lower Left",
         },
     ];
-
-
-
 
 export const oldquadrants: Array<{
     name: "first" | "second" | "third" | "fourth";
@@ -109,8 +101,6 @@ export const oldquadrants: Array<{
             label: "Lower Left",
         },
     ];
-
-
 
 export function convertFDIToNotation(fdi: string, notation: Notation) {
     const num = fdi.replace("teeth-", "");

@@ -16,8 +16,8 @@ export default {
   },
   args: {
     styles: {
-      maxWidth: '300px',
-    }
+      maxWidth: "300px",
+    },
   },
   argTypes: {
     theme: {
@@ -33,7 +33,6 @@ export default {
     },
     singleSelect: { control: "boolean" },
     onChange: { action: "changed" },
-
   },
 } as Meta<typeof Odontogram>;
 
@@ -47,20 +46,14 @@ Light.args = {
   onChange: (selected) => {
     alert(JSON.stringify(selected));
   },
-  tooltip: {
-    margin: -10,
-    placement: "top"
-  }
+
 };
 
-
-
-const DarkTemplate: StoryFn<typeof Odontogram> = (args) =>
+const DarkTemplate: StoryFn<typeof Odontogram> = (args) => (
   <div className="dark-template">
     <Odontogram {...args} />
   </div>
-  ;
-
+);
 
 export const Dark = DarkTemplate.bind({});
 Dark.args = {
@@ -147,5 +140,3 @@ LowerHalf.args = {
   showHalf: "lower",
 };
 LowerHalf.storyName = "LowerHalf";
-
-

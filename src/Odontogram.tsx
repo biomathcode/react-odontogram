@@ -8,6 +8,7 @@ import {
   useRef,
   useState,
 } from "react";
+import ConditionLabels from "./Labels";
 import { Teeth } from "./Teeth";
 import { OdontogramTooltip } from "./Tooltip";
 import { NewTeethPaths, teethPaths } from "./data";
@@ -22,33 +23,39 @@ import {
   convertFDIToNotation,
   getToothNotations,
   mapToCssVars,
-  placements,
   quadrants as newquadrants,
-  oldquadrants
+  oldquadrants,
+  placements,
 } from "./utils";
-import ConditionLabels from "./Labels";
 
-type Layout = 'circle' | 'square';
-type ShowHalf = 'full' | 'upper' | 'lower';
+type Layout = "circle" | "square";
+type ShowHalf = "full" | "upper" | "lower";
 
 export function getViewBox(layout: Layout, showHalf: ShowHalf): string {
-  if (layout === 'square') {
+  if (layout === "square") {
     // linear does not support half slicing (single row)
 
-    if (showHalf === 'upper') return '0 0 900 75';
-    if (showHalf === 'lower') return '0 75 900 75 ';
+    if (showHalf === "upper") {
+      return "0 0 900 75";
+    }
+    if (showHalf === "lower") {
+      return "0 75 900 75 ";
+    }
 
-
-    return '0 0 900 150';
+    return "0 0 900 150";
   }
 
   // circle layout
-  const full = '0 0 409 694';
-  const upper = '0 0 409 347';
-  const lower = '0 347 409 347';
+  const full = "0 0 409 694";
+  const upper = "0 0 409 347";
+  const lower = "0 347 409 347";
 
-  if (showHalf === 'upper') return upper;
-  if (showHalf === 'lower') return lower;
+  if (showHalf === "upper") {
+    return upper;
+  }
+  if (showHalf === "lower") {
+    return lower;
+  }
   return full;
 }
 
@@ -71,20 +78,20 @@ export const Odontogram: FC<OdontogramProps> = ({
   teethConditions,
   readOnly = false,
   showLabels = false,
-  layout = 'circle',
-  styles
+  layout = "circle",
+  styles,
 }) => {
   /**
    * Memo: tooth type lookup
    */
 
-  const teethpath = layout === 'circle' ? teethPaths : NewTeethPaths;
+  const teethpath = layout === "circle" ? teethPaths : NewTeethPaths;
 
-  const quadrants = layout === 'circle' ? oldquadrants : newquadrants;
+  const quadrants = layout === "circle" ? oldquadrants : newquadrants;
 
   const toothTypeByName = useMemo(
     () => new Map(teethpath.map((t) => [t.name, t.type])),
-    [teethpath]
+    [teethpath],
   );
 
   /**
@@ -95,18 +102,15 @@ export const Odontogram: FC<OdontogramProps> = ({
       const toothName = id.replace("teeth-", "").slice(1);
       return toothTypeByName.get(toothName) ?? "Unknown";
     },
-    [toothTypeByName]
+    [toothTypeByName],
   );
 
-  const clampMaxTeeth = useCallback(
-    (value: number | undefined) => {
-      if (typeof value !== "number" || Number.isNaN(value)) {
-        return teethpath.length;
-      }
-      return Math.max(0, Math.min(teethpath.length, Math.floor(value)));
-    },
-    []
-  );
+  const clampMaxTeeth = useCallback((value: number | undefined) => {
+    if (typeof value !== "number" || Number.isNaN(value)) {
+      return teethpath.length;
+    }
+    return Math.max(0, Math.min(teethpath.length, Math.floor(value)));
+  }, [teethpath]);
 
   const buildToothDetail = useCallback(
     (id: string): ToothDetail => ({
@@ -114,7 +118,7 @@ export const Odontogram: FC<OdontogramProps> = ({
       notations: getToothNotations(id),
       type: getToothType(id),
     }),
-    [getToothType]
+    [getToothType],
   );
 
   /**
@@ -137,17 +141,24 @@ export const Odontogram: FC<OdontogramProps> = ({
    * State
    */
   const [selected, setSelected] = useState<Set<string>>(
-    () =>
-      new Set(
-        singleSelect ? defaultSelected.slice(0, 1) : defaultSelected
-      )
+    () => new Set(singleSelect ? defaultSelected.slice(0, 1) : defaultSelected),
   );
 
   const svgRef = useRef<SVGSVGElement>(null);
 
   const [tooltipData, setTooltipData] = useState<{
     active: boolean;
-    position?: { x: number; y: number };
+    position?: {
+      x: number;
+      placement: Placement;
+      margin: number;
+      anchorRect: {
+        top: number;
+        right: number;
+        bottom: number;
+        left: number;
+      };
+    };
     payload?: ToothDetail;
   }>({ active: false });
 
@@ -156,7 +167,9 @@ export const Odontogram: FC<OdontogramProps> = ({
    */
   const handleToggle = useCallback(
     (id: string) => {
-      if (readOnly) return;
+      if (readOnly) {
+        return;
+      }
 
       setSelected((previous) => {
         const updated = new Set(previous);
@@ -176,47 +189,58 @@ export const Odontogram: FC<OdontogramProps> = ({
         return updated;
       });
     },
-    [onChange, readOnly, buildToothDetail, singleSelect]
+    [onChange, readOnly, buildToothDetail, singleSelect],
   );
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<SVGGElement>, id: string) => {
-      if (readOnly) return;
+      if (readOnly) {
+        return;
+      }
 
       if (event.key === "Enter" || event.key === " ") {
         event.preventDefault();
         handleToggle(id);
       }
     },
-    [handleToggle, readOnly]
+    [handleToggle, readOnly],
   );
 
   const handleHover = useCallback(
     (
       id: string,
       event: ToothInteractionEvent,
-      placement: Placement = "right"
+      placement: Placement = "right",
     ) => {
       const path = event.currentTarget.querySelector("path");
-      if (!(path && svgRef.current)) return;
+      if (!(path && svgRef.current)) {
+        return;
+      }
 
       const toothBox = path.getBoundingClientRect();
-      const svgBox = svgRef.current.getBoundingClientRect();
       const margin = tooltip.margin ?? 10;
 
-      const { x, y } =
+      const { x } =
         placements[placement]?.(toothBox, margin) ??
         placements.right(toothBox, margin);
 
-      const safeY = y < svgBox.top ? toothBox.bottom + margin : y;
-
       setTooltipData({
         active: true,
-        position: { x, y: safeY },
+        position: {
+          x,
+          placement,
+          margin,
+          anchorRect: {
+            top: toothBox.top,
+            right: toothBox.right,
+            bottom: toothBox.bottom,
+            left: toothBox.left,
+          },
+        },
         payload: buildToothDetail(id),
       });
     },
-    [tooltip.margin, tooltip.placement, buildToothDetail]
+    [tooltip.margin, buildToothDetail],
   );
 
   const handleLeave = useCallback(() => {
@@ -238,7 +262,7 @@ export const Odontogram: FC<OdontogramProps> = ({
    */
   const filteredTeeth = useMemo(
     () => teethpath.slice(0, clampMaxTeeth(maxTeeth)),
-    [maxTeeth, clampMaxTeeth, layout]
+    [maxTeeth, clampMaxTeeth, teethpath],
   );
 
   /**
@@ -247,11 +271,13 @@ export const Odontogram: FC<OdontogramProps> = ({
   const conditionMap = useMemo(() => {
     const map = new Map<string, ToothConditionGroup>();
 
-    teethConditions?.forEach((condition) => {
-      condition.teeth.forEach((toothId) => {
-        map.set(toothId, condition);
-      });
-    });
+    if (teethConditions) {
+      for (const condition of teethConditions) {
+        for (const toothId of condition.teeth) {
+          map.set(toothId, condition);
+        }
+      }
+    }
 
     return map;
   }, [teethConditions]);
@@ -270,6 +296,7 @@ export const Odontogram: FC<OdontogramProps> = ({
           <Teeth
             key={id}
             readOnly={readOnly}
+
             {...tooth}
             name={id}
             selected={selected.has(id)}
@@ -307,7 +334,7 @@ export const Odontogram: FC<OdontogramProps> = ({
       handleLeave,
       showTooltip,
       tooltip.placement,
-    ]
+    ],
   );
 
   /**
@@ -326,12 +353,9 @@ export const Odontogram: FC<OdontogramProps> = ({
     .filter(Boolean)
     .join(" ");
 
-
-  //we have 4 conditions 
-  //layout is circle or square 
-  // if 
-
-
+  //we have 4 conditions
+  //layout is circle or square
+  // if
 
   return (
     <div
@@ -345,12 +369,14 @@ export const Odontogram: FC<OdontogramProps> = ({
         gap: "20px",
         justifyContent: "center",
         alignItems: "center",
-        ...styles as CSSProperties
+        ...(styles as CSSProperties),
       }}
-      role="listbox"
+      role={readOnly ? "group" : "listbox"}
+      aria-multiselectable={readOnly ? undefined : !singleSelect}
+
       aria-label="Odontogram"
-      aria-multiselectable={!singleSelect}
       data-read-only={readOnly ? "true" : "false"}
+      tabIndex={readOnly ? -1 : 0}
     >
       <input
         type="hidden"
@@ -362,26 +388,19 @@ export const Odontogram: FC<OdontogramProps> = ({
         ref={svgRef}
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
-        viewBox={getViewBox(layout, showHalf)
-        }
+        viewBox={getViewBox(layout, showHalf)}
         className="Odontogram"
         style={{
           width: "100%",
           height: "auto",
           userSelect: "none",
           touchAction: "manipulation",
-
         }}
       >
         <title>Odontogram</title>
 
         {visibleQuadrants.map(({ name, transform, label }, index) => (
-          <g
-            role="group"
-            aria-label={label}
-            key={name}
-            transform={transform}
-          >
+          <g key={name} transform={transform}>
             {renderTeeth(`teeth-${index + 1}`)}
           </g>
         ))}
@@ -396,9 +415,7 @@ export const Odontogram: FC<OdontogramProps> = ({
         />
       )}
 
-      {showLabels && (
-        <ConditionLabels conditions={teethConditions} />
-      )}
+      {showLabels && <ConditionLabels conditions={teethConditions} />}
     </div>
   );
 };

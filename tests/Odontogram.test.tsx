@@ -68,6 +68,60 @@ describe("Odontogram", () => {
     expect(onChange).toHaveBeenLastCalledWith([]);
   });
 
+  it("limits selection to one tooth in singleSelect mode", () => {
+    const onChange = vi.fn();
+
+    const { container } = render(
+      <Odontogram onChange={onChange} singleSelect={true} readOnly={false} />
+    );
+
+    expect(
+      screen.getByRole("listbox", { name: "Odontogram" })
+    ).toHaveAttribute("aria-multiselectable", "false");
+
+    const tooth11 = screen.getByRole("option", { name: "Tooth 11" });
+    const tooth12 = screen.getByRole("option", { name: "Tooth 12" });
+
+    fireEvent.click(tooth11);
+    expect(tooth11).toHaveAttribute("aria-selected", "true");
+    expect(tooth12).toHaveAttribute("aria-selected", "false");
+
+    fireEvent.click(tooth12);
+    expect(tooth11).toHaveAttribute("aria-selected", "false");
+    expect(tooth12).toHaveAttribute("aria-selected", "true");
+
+    const hiddenInput = container.querySelector<HTMLInputElement>(
+      "input[type='hidden'][name='teeth']"
+    );
+
+    expect(hiddenInput?.value).toBe(JSON.stringify(["teeth-12"]));
+    expect(onChange).toHaveBeenLastCalledWith([
+      expect.objectContaining({ id: "teeth-12" }),
+    ]);
+
+    fireEvent.click(tooth12);
+    expect(hiddenInput?.value).toBe(JSON.stringify([]));
+    expect(onChange).toHaveBeenLastCalledWith([]);
+  });
+
+  it("keeps only first defaultSelected tooth in singleSelect mode", () => {
+    render(
+      <Odontogram
+        singleSelect={true}
+        defaultSelected={["teeth-11", "teeth-12"]}
+      />
+    );
+
+    expect(screen.getByRole("option", { name: "Tooth 11" })).toHaveAttribute(
+      "aria-selected",
+      "true"
+    );
+    expect(screen.getByRole("option", { name: "Tooth 12" })).toHaveAttribute(
+      "aria-selected",
+      "false"
+    );
+  });
+
   it("supports keyboard selection with Enter and Space", () => {
     render(<Odontogram />);
 

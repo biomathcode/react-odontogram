@@ -54,6 +54,7 @@ export function getViewBox(layout: Layout, showHalf: ShowHalf): string {
 
 export const Odontogram: FC<OdontogramProps> = ({
   defaultSelected = [],
+  singleSelect = false,
   onChange,
   className = "",
   theme = "light",
@@ -136,7 +137,10 @@ export const Odontogram: FC<OdontogramProps> = ({
    * State
    */
   const [selected, setSelected] = useState<Set<string>>(
-    () => new Set(defaultSelected)
+    () =>
+      new Set(
+        singleSelect ? defaultSelected.slice(0, 1) : defaultSelected
+      )
   );
 
   const svgRef = useRef<SVGSVGElement>(null);
@@ -156,13 +160,23 @@ export const Odontogram: FC<OdontogramProps> = ({
 
       setSelected((previous) => {
         const updated = new Set(previous);
-        updated.has(id) ? updated.delete(id) : updated.add(id);
+
+        if (singleSelect) {
+          if (updated.has(id)) {
+            updated.delete(id);
+          } else {
+            updated.clear();
+            updated.add(id);
+          }
+        } else {
+          updated.has(id) ? updated.delete(id) : updated.add(id);
+        }
 
         onChange?.(Array.from(updated).map(buildToothDetail));
         return updated;
       });
     },
-    [onChange, readOnly, buildToothDetail]
+    [onChange, readOnly, buildToothDetail, singleSelect]
   );
 
   const handleKeyDown = useCallback(
@@ -335,7 +349,7 @@ export const Odontogram: FC<OdontogramProps> = ({
       }}
       role="listbox"
       aria-label="Odontogram"
-      aria-multiselectable="true"
+      aria-multiselectable={!singleSelect}
       data-read-only={readOnly ? "true" : "false"}
     >
       <input

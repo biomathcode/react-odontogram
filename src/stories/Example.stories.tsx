@@ -31,6 +31,7 @@ export default {
     colors: {
       control: "object",
     },
+    singleSelect: { control: "boolean" },
     onChange: { action: "changed" },
 
   },
@@ -81,6 +82,15 @@ Default.args = {
   colors: {},
   defaultSelected: ["teeth-11", "teeth-12", "teeth-22"],
 };
+
+export const SingleSelect = Template.bind({});
+SingleSelect.args = {
+  theme: "light",
+  colors: {},
+  singleSelect: true,
+  defaultSelected: ["teeth-11"],
+};
+SingleSelect.storyName = "Single Select";
 
 export const WithCustomTooltip = Template.bind({});
 WithCustomTooltip.args = {
@@ -137,6 +147,5 @@ LowerHalf.args = {
   showHalf: "lower",
 };
 LowerHalf.storyName = "LowerHalf";
-
 
 

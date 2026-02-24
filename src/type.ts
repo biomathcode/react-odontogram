@@ -71,6 +71,7 @@ export interface TeethProps {
 export interface OdontogramProps {
   name?: string;
   defaultSelected?: string[];
+  singleSelect?: boolean;
   onChange?: (selected: ToothDetail[]) => void;
   className?: string;
   selectedColor?: string;

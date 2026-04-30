@@ -142,12 +142,12 @@ export function OdontogramTooltip({
 								top: "-6px",
 								borderBottom:
 									"6px solid var(--odontogram-tooltip-bg, rgba(0, 0, 0, 0.85))",
-						  }
+							}
 						: {
 								bottom: "-6px",
 								borderTop:
 									"6px solid var(--odontogram-tooltip-bg, rgba(0, 0, 0, 0.85))",
-						  }),
+							}),
 				}}
 			/>
 		</div>

@@ -52,13 +52,8 @@
 		},
 		"./style.css": "./dist/index.css"
 	},
-	"sideEffects": [
-		"*.css",
-		"**/*.css"
-	],
-	"files": [
-		"dist"
-	],
+	"sideEffects": ["*.css", "**/*.css"],
+	"files": ["dist"],
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@ryansonshine/cz-conventional-changelog"

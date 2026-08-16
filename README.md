@@ -301,6 +301,8 @@ This makes it easy to extend or customize if you fork the library.
 
 ## 🧪 Development
 
+Requires Node.js >= 18.
+
 Run locally:
 
 ```bash

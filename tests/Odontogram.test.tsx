@@ -144,6 +144,100 @@ describe("Odontogram", () => {
 
 		expect(screen.queryByRole("tooltip")).not.toBeInTheDocument();
 	});
+
+	it("renders correct teeth and transforms for all FDI quadrants (Q1, Q2, Q4, Q3)", () => {
+		render(<Odontogram layout="square" />);
+
+		const q1Tooth = screen.getByRole("option", { name: "Tooth 11" });
+		expect(q1Tooth.closest("g[transform]")).toHaveAttribute("transform", "");
+
+		const q2Tooth = screen.getByRole("option", { name: "Tooth 21" });
+		expect(q2Tooth.closest("g[transform]")).toHaveAttribute(
+			"transform",
+			"translate(840, 0) scale(-1, 1) translate(-55,0)",
+		);
+
+		const q4Tooth = screen.getByRole("option", { name: "Tooth 41" });
+		expect(q4Tooth.closest("g[transform]")).toHaveAttribute(
+			"transform",
+			"scale(1, -1) translate(0, -150)",
+		);
+
+		const q3Tooth = screen.getByRole("option", { name: "Tooth 31" });
+		expect(q3Tooth.closest("g[transform]")).toHaveAttribute(
+			"transform",
+			"translate(840, 0) scale(-1, -1) translate(-55,-150)",
+		);
+	});
+
+	it("renders lower jaw teeth (31-38 and 41-48) when showHalf='lower'", () => {
+		render(<Odontogram showHalf="lower" />);
+
+		expect(
+			screen.getByRole("option", { name: "Tooth 41" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 48" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 31" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 38" }),
+		).toBeInTheDocument();
+
+		expect(
+			screen.queryByRole("option", { name: "Tooth 11" }),
+		).not.toBeInTheDocument();
+		expect(
+			screen.queryByRole("option", { name: "Tooth 21" }),
+		).not.toBeInTheDocument();
+	});
+
+	it("renders upper jaw teeth (11-18 and 21-28) when showHalf='upper'", () => {
+		render(<Odontogram showHalf="upper" />);
+
+		expect(
+			screen.getByRole("option", { name: "Tooth 11" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 18" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 21" }),
+		).toBeInTheDocument();
+		expect(
+			screen.getByRole("option", { name: "Tooth 28" }),
+		).toBeInTheDocument();
+
+		expect(
+			screen.queryByRole("option", { name: "Tooth 41" }),
+		).not.toBeInTheDocument();
+		expect(
+			screen.queryByRole("option", { name: "Tooth 31" }),
+		).not.toBeInTheDocument();
+	});
+
+	it("handles lower tooth selection and onChange with correct FDI payloads", () => {
+		const onChange = vi.fn();
+		const { container } = render(
+			<Odontogram showHalf="lower" onChange={onChange} />,
+		);
+
+		const tooth48 = screen.getByRole("option", { name: "Tooth 48" });
+		fireEvent.click(tooth48);
+
+		expect(tooth48).toHaveAttribute("aria-selected", "true");
+		expect(container.querySelector("input[type='hidden']")).toHaveValue(
+			'["teeth-48"]',
+		);
+		expect(onChange).toHaveBeenLastCalledWith([
+			expect.objectContaining({
+				id: "teeth-48",
+				notations: { fdi: "48", universal: "32", palmer: "8LR" },
+			}),
+		]);
+	});
 });
 
 describe("notation helpers", () => {

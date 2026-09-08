@@ -297,9 +297,9 @@ export const NativeOdontogram: FC<NativeOdontogramProps> = ({
 			viewBox={getNativeViewBox(layout, showHalf, showLabels)}
 			width={width}
 		>
-			{visibleQuadrants.map(({ name, transform }, index) => (
+			{visibleQuadrants.map(({ name, transform, prefix }) => (
 				<G key={name} transform={transform}>
-					{renderTeeth(`teeth-${index + 1}`)}
+					{renderTeeth(`teeth-${prefix}`)}
 				</G>
 			))}
 

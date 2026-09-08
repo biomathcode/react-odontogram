@@ -372,9 +372,9 @@ export const Odontogram: FC<OdontogramProps> = ({
 			>
 				<title>Odontogram</title>
 
-				{visibleQuadrants.map(({ name, transform, label }, index) => (
+				{visibleQuadrants.map(({ name, transform, prefix }) => (
 					<g key={name} transform={transform}>
-						{renderTeeth(`teeth-${index + 1}`)}
+						{renderTeeth(`teeth-${prefix}`)}
 					</g>
 				))}
 			</svg>

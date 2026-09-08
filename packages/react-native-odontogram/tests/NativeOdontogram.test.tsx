@@ -47,6 +47,15 @@ describe("NativeOdontogram", () => {
 
 		expect(getInteractiveTeeth(chart.root)).toHaveLength(16);
 		expect(getSvgNode(chart.root).props.viewBox).toBe("0 347 409 347");
+		expect(getTooth(chart.root, "Tooth 41")).toBeDefined();
+		expect(getTooth(chart.root, "Tooth 31")).toBeDefined();
+		expect(
+			chart.root.findAll(
+				(node) =>
+					node.props.testID === "G" &&
+					node.props.accessibilityLabel === "Tooth 11",
+			),
+		).toHaveLength(0);
 	});
 
 	it("respects maxTeeth for each quadrant", () => {

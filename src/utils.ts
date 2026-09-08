@@ -83,26 +83,31 @@ export const quadrants: Array<{
 	name: "first" | "second" | "third" | "fourth";
 	transform: string;
 	label: string;
+	prefix: string;
 }> = [
 	{
 		name: "first",
 		transform: "",
 		label: "Upper Right",
+		prefix: "1",
 	},
 	{
 		name: "second",
 		transform: "translate(840, 0) scale(-1, 1) translate(-55,0)",
 		label: "Upper Left",
-	},
-	{
-		name: "third",
-		transform: "scale(1, -1) translate(0, -150)",
-		label: "Lower Right",
+		prefix: "2",
 	},
 	{
 		name: "fourth",
+		transform: "scale(1, -1) translate(0, -150)",
+		label: "Lower Right",
+		prefix: "4",
+	},
+	{
+		name: "third",
 		transform: "translate(840, 0) scale(-1, -1) translate(-55,-150)",
 		label: "Lower Left",
+		prefix: "3",
 	},
 ];
 
@@ -110,26 +115,31 @@ export const oldquadrants: Array<{
 	name: "first" | "second" | "third" | "fourth";
 	transform: string;
 	label: string;
+	prefix: string;
 }> = [
 	{
 		name: "first",
 		transform: "",
 		label: "Upper Right",
+		prefix: "1",
 	},
 	{
 		name: "second",
 		transform: "scale(-1, 1) translate(-409, 0)",
 		label: "Upper Left",
-	},
-	{
-		name: "third",
-		transform: "scale(1, -1) translate(0, -694)",
-		label: "Lower Right",
+		prefix: "2",
 	},
 	{
 		name: "fourth",
+		transform: "scale(1, -1) translate(0, -694)",
+		label: "Lower Right",
+		prefix: "4",
+	},
+	{
+		name: "third",
 		transform: "scale(-1, -1) translate(-409, -694)",
 		label: "Lower Left",
+		prefix: "3",
 	},
 ];
 

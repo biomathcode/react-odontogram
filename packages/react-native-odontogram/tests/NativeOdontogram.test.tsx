@@ -6,7 +6,8 @@ import NativeOdontogram, {
 
 const getInteractiveTeeth = (root: ReturnType<typeof create>["root"]) =>
 	root.findAll(
-		(node) => node.type === "G" && node.props.accessibilityRole === "button",
+		(node) =>
+			node.props.testID === "G" && node.props.accessibilityRole === "button",
 	);
 
 const getTooth = (
@@ -15,8 +16,12 @@ const getTooth = (
 ) =>
 	root.find(
 		(node) =>
-			node.type === "G" && node.props.accessibilityLabel === accessibilityLabel,
+			node.props.testID === "G" &&
+			node.props.accessibilityLabel === accessibilityLabel,
 	);
+
+const getSvgNode = (root: ReturnType<typeof create>["root"]) =>
+	root.findByProps({ testID: "Svg" });
 
 describe("NativeOdontogram", () => {
 	it("exports the native component as default and named exports", () => {
@@ -27,21 +32,21 @@ describe("NativeOdontogram", () => {
 		const chart = create(<NativeOdontogram />);
 
 		expect(getInteractiveTeeth(chart.root)).toHaveLength(32);
-		expect(chart.root.findByType("Svg").props.viewBox).toBe("0 0 409 694");
+		expect(getSvgNode(chart.root).props.viewBox).toBe("0 0 409 694");
 	});
 
 	it("renders upper and lower halves", () => {
 		const chart = create(<NativeOdontogram showHalf="upper" />);
 
 		expect(getInteractiveTeeth(chart.root)).toHaveLength(16);
-		expect(chart.root.findByType("Svg").props.viewBox).toBe("0 0 409 347");
+		expect(getSvgNode(chart.root).props.viewBox).toBe("0 0 409 347");
 
 		act(() => {
 			chart.update(<NativeOdontogram showHalf="lower" />);
 		});
 
 		expect(getInteractiveTeeth(chart.root)).toHaveLength(16);
-		expect(chart.root.findByType("Svg").props.viewBox).toBe("0 347 409 347");
+		expect(getSvgNode(chart.root).props.viewBox).toBe("0 347 409 347");
 	});
 
 	it("respects maxTeeth for each quadrant", () => {
@@ -140,13 +145,19 @@ describe("NativeOdontogram", () => {
 				]}
 			/>,
 		);
-		const toothPaths = getTooth(chart.root, "Tooth 11").findAllByType("Path");
+		const toothPaths = getTooth(chart.root, "Tooth 11").findAllByProps({
+			testID: "Path",
+		});
 
 		expect(toothPaths[0].props.stroke).toBe("#b91c1c");
 		expect(toothPaths[1].props.fill).toBe("#ef4444");
-		expect(chart.root.findByType("Rect").props.fill).toBe("#ef4444");
-		expect(chart.root.findByType("Text").children).toEqual(["caries"]);
-		expect(chart.root.findByType("Svg").props.viewBox).toBe("0 0 409 722");
+		expect(chart.root.findByProps({ testID: "Rect" }).props.fill).toBe(
+			"#ef4444",
+		);
+		expect(chart.root.findByProps({ testID: "Text" }).children).toEqual([
+			"caries",
+		]);
+		expect(getSvgNode(chart.root).props.viewBox).toBe("0 0 409 722");
 	});
 
 	it("supports square layout and alternate notation labels", () => {
@@ -154,7 +165,7 @@ describe("NativeOdontogram", () => {
 			<NativeOdontogram layout="square" notation="Universal" />,
 		);
 
-		expect(chart.root.findByType("Svg").props.viewBox).toBe("0 0 900 150");
+		expect(getSvgNode(chart.root).props.viewBox).toBe("0 0 900 150");
 		expect(getTooth(chart.root, "Tooth 8")).toBeTruthy();
 	});
 });

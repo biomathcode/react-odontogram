@@ -8,7 +8,7 @@ type SvgMockProps = {
 const createSvgMock =
 	(type: string) =>
 	({ children, ...props }: SvgMockProps) =>
-		createElement(type, props, children);
+		createElement(type, { ...props, testID: type }, children);
 
 const Svg = createSvgMock("Svg");
 

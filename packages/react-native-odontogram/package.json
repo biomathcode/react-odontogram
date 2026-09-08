@@ -1,0 +1,58 @@
+{
+	"name": "react-native-odontogram",
+	"description": "React Native dental chart for selecting teeth",
+	"version": "0.1.0",
+	"author": "Pratik Sharma <sharma.pratik2016@gmail.com>",
+	"license": "MIT",
+	"keywords": [
+		"odontogram",
+		"react-native",
+		"dental-chart",
+		"dental",
+		"tooth",
+		"teeth",
+		"dental-selector",
+		"dentistry",
+		"react-native-svg"
+	],
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/biomathcode/react-odontogram.git",
+		"directory": "packages/react-native-odontogram"
+	},
+	"scripts": {
+		"build": "tsup",
+		"test": "vitest run --config ../../vitest.config.mts tests",
+		"prepublishOnly": "npm run build"
+	},
+	"main": "./dist/index.js",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"require": "./dist/index.js",
+			"import": "./dist/index.mjs",
+			"default": "./dist/index.mjs"
+		}
+	},
+	"sideEffects": false,
+	"files": ["dist"],
+	"peerDependencies": {
+		"react": ">=17",
+		"react-native": ">=0.72",
+		"react-native-svg": ">=13"
+	},
+	"devDependencies": {
+		"@types/react": "18.3.13",
+		"@types/react-test-renderer": "18.3.0",
+		"react": "18.3.1",
+		"react-test-renderer": "18.3.1",
+		"tsup": "8.4.0",
+		"typescript": "5.8.2",
+		"vitest": "3.0.9"
+	}
+}

@@ -1,16 +1,33 @@
 
+<p align="center">
+  <a href="https://github.com/biomathcode/react-odontogram">
+    <img src="https://raw.githubusercontent.com/biomathcode/react-odontogram/main/assets/banner.svg" alt="react-odontogram - interactive dental charts for React and React Native" width="100%" />
+  </a>
+</p>
 
 # 🦷 `react-odontogram`
 
-
-
 [![npm version](https://img.shields.io/npm/v/react-odontogram?color=blue\&label=npm)](https://www.npmjs.com/package/react-odontogram)
 [![npm downloads](https://img.shields.io/npm/dm/react-odontogram?color=green\&label=downloads)](https://www.npmjs.com/package/react-odontogram)
+[![react-native-odontogram](https://img.shields.io/npm/v/react-native-odontogram?color=teal\&label=react-native-odontogram)](https://www.npmjs.com/package/react-native-odontogram)
 [![Storybook](https://img.shields.io/badge/Storybook-Demo-orange)](https://biomathcode.github.io/react-odontogram)
 [![codecov](https://codecov.io/gh/biomathcode/react-odontogram/branch/main/graph/badge.svg?token=)](https://codecov.io/gh/biomathcode/react-odontogram)
 
 A modern, interactive **React Odontogram** component for dental chart visualization and data collection.
 Built with SVG and React hooks — fully customizable, accessible, and designed for clinical or academic applications.
+
+**Links:** [Website](https://coolhead.in) · [GitHub](https://github.com/biomathcode) · [LinkedIn](https://linkedin.com/in/biomathcode)
+
+---
+
+## Packages
+
+| Package | Platform | Install |
+| --- | --- | --- |
+| [`react-odontogram`](https://www.npmjs.com/package/react-odontogram) | React web | `npm install react-odontogram` |
+| [`react-native-odontogram`](https://www.npmjs.com/package/react-native-odontogram) | React Native | `npm install react-native-odontogram react-native-svg` |
+
+Both packages share the same tooth data model, notation helpers, selection payloads, condition coloring, layout modes, and half-chart options.
 
 ---
 
@@ -28,7 +45,21 @@ Built with SVG and React hooks — fully customizable, accessible, and designed 
 
 ---
 
+## Responsive Example
+
+Run the local example site:
+
+```bash
+pnpm example:responsive
+```
+
+The example is in `examples/responsive-site` and includes responsive containers, layout switching, notation switching, half-chart views, condition labels, single-select mode, read-only mode, and live selection output.
+
+---
+
 ## 📦 Installation
+
+### React Web
 
 ```bash
 # Using npm
@@ -42,6 +73,21 @@ yarn add react-odontogram
 ```
 
 > Make sure you have `react` and `react-dom` installed as peer dependencies.
+
+### React Native
+
+```bash
+# Using npm
+npm install react-native-odontogram react-native-svg
+
+# Using pnpm
+pnpm add react-native-odontogram react-native-svg
+
+# Using yarn
+yarn add react-native-odontogram react-native-svg
+```
+
+> Make sure your React Native app has `react`, `react-native`, and `react-native-svg` installed.
 
 ---
 
@@ -80,6 +126,26 @@ export default function App() {
   };
 
   return <Odontogram onChange={handleChange} />;
+}
+```
+
+### React Native Quick Start
+
+Use the separate [`react-native-odontogram`](https://www.npmjs.com/package/react-native-odontogram) package:
+
+```tsx
+import { NativeOdontogram } from "react-native-odontogram";
+
+export default function App() {
+  return (
+    <NativeOdontogram
+      height={420}
+      onChange={(selectedTeeth) => {
+        console.log(selectedTeeth);
+      }}
+      width="100%"
+    />
+  );
 }
 ```
 
@@ -149,6 +215,8 @@ Example JSON output:
 | `showLabels` | `boolean` | `false` | Show the condition legend under the chart. |
 | `layout` | `"circle" \| "square"` | `"circle"` | Render classic arch layout or square/row layout. |
 | `styles` | `React.CSSProperties` | `undefined` | Inline styles applied to the root container. |
+
+The separate `react-native-odontogram` package supports the shared selection, notation, color, condition, read-only, half-chart, and layout props. Native-specific sizing is controlled with `width`, `height`, and `style`.
 
 `Placement` values:
 

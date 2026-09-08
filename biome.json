@@ -5,6 +5,7 @@
 			"**/dist/**",
 			"**/storybook-static/**",
 			"**/coverage/**",
+			"**/.vercel/**",
 			"**/.next/**",
 			"**/node_modules/**"
 		]

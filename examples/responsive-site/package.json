@@ -1,0 +1,17 @@
+{
+	"name": "react-odontogram-responsive-example",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"dev": "vite --host 127.0.0.1 --port 5174",
+		"build": "vite build"
+	},
+	"dependencies": {
+		"@vitejs/plugin-react": "latest",
+		"vite": "latest",
+		"typescript": "latest",
+		"react": "18.3.1",
+		"react-dom": "18.3.1",
+		"react-odontogram": "file:../.."
+	}
+}

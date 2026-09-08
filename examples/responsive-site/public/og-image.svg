@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+	<title id="title">Free Dental Chart Generator</title>
+	<desc id="desc">Create and export responsive odontogram dental charts online.</desc>
+	<defs>
+		<linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+			<stop offset="0" stop-color="#f8fafc"/>
+			<stop offset="0.58" stop-color="#e6f4f1"/>
+			<stop offset="1" stop-color="#dbeafe"/>
+		</linearGradient>
+	</defs>
+	<rect width="1200" height="630" fill="url(#bg)"/>
+	<path d="M0 510C150 462 260 556 420 500C585 442 626 286 812 312C984 336 1044 468 1200 424V630H0Z" fill="#0f766e" opacity="0.13"/>
+	<g transform="translate(72 96)">
+		<rect width="210" height="42" rx="21" fill="#0f766e"/>
+		<text x="105" y="28" text-anchor="middle" font-family="Inter, Arial, sans-serif" font-size="17" font-weight="800" fill="#fff">dental.coolhead.in</text>
+		<text x="0" y="132" font-family="Inter, Arial, sans-serif" font-size="72" font-weight="900" fill="#0f172a">Free Dental Chart Generator</text>
+		<text x="0" y="190" font-family="Inter, Arial, sans-serif" font-size="30" font-weight="700" fill="#334155">Create odontograms online and export SVG, PNG, or JSON.</text>
+		<text x="0" y="252" font-family="Inter, Arial, sans-serif" font-size="22" fill="#475569">FDI, Universal, and Palmer notation · responsive dental chart layouts</text>
+	</g>
+	<g transform="translate(802 132)">
+		<rect width="270" height="328" rx="30" fill="#fff" stroke="#d9e1ea"/>
+		<path d="M134 52c-18-1-45-10-65 7-22 18-10 61 3 91 8 19 21 31 32 47 18 27 16 89 36 89 16 0 16-52 34-52s18 52 34 52c20 0 18-62 36-89 11-16 24-28 32-47 13-30 25-73 3-91-20-17-47-8-65-7-30 2-50 2-80 0Z" fill="#f8fafc" stroke="#0f766e" stroke-width="9" stroke-linejoin="round"/>
+		<path d="M84 118c16-24 45-38 82-37" fill="none" stroke="#38bdf8" stroke-width="9" stroke-linecap="round"/>
+	</g>
+</svg>

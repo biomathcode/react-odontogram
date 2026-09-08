@@ -1,0 +1,6 @@
+{
+	"buildCommand": "npm run example:responsive:build",
+	"outputDirectory": "examples/responsive-site/dist",
+	"installCommand": "npm install --ignore-scripts",
+	"framework": "vite"
+}

@@ -2,6 +2,8 @@
 
 # dependencies
 /node_modules
+examples/*/node_modules
+packages/*/node_modules
 /.pnp
 .pnp.js
 
@@ -13,6 +15,8 @@
 
 # production
 /dist
+examples/*/dist
+packages/*/dist
 
 # misc
 .DS_Store
@@ -30,5 +34,7 @@ yarn-error.log*
 .env.development.local
 .env.test.local
 .env.production.local
+.vercel
 
 storybook-static
+.vercel

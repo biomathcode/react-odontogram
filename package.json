@@ -36,6 +36,8 @@
 		"commit": "cz",
 		"storybook": "storybook dev -p 6006",
 		"storybook:build": "storybook build",
+		"example:responsive": "cd examples/responsive-site && vite --host 127.0.0.1 --port 5174",
+		"example:responsive:build": "cd examples/responsive-site && vite build",
 		"release": "pnpm build && pnpm release-it",
 		"link:self": "pnpm link --global",
 		"prepare": "lefthook install",
@@ -52,13 +54,8 @@
 		},
 		"./style.css": "./dist/index.css"
 	},
-	"sideEffects": [
-		"*.css",
-		"**/*.css"
-	],
-	"files": [
-		"dist"
-	],
+	"sideEffects": ["*.css", "**/*.css"],
+	"files": ["dist"],
 	"config": {
 		"commitizen": {
 			"path": "./node_modules/@ryansonshine/cz-conventional-changelog"

@@ -1,5 +1,36 @@
 import type { Notation, OdontogramColors, Placement } from "./type";
 
+type Layout = "circle" | "square";
+type ShowHalf = "full" | "upper" | "lower";
+
+export function getViewBox(layout: Layout, showHalf: ShowHalf): string {
+	if (layout === "square") {
+		// linear does not support half slicing (single row)
+
+		if (showHalf === "upper") {
+			return "0 0 900 75";
+		}
+		if (showHalf === "lower") {
+			return "0 75 900 75 ";
+		}
+
+		return "0 0 900 150";
+	}
+
+	// circle layout
+	const full = "0 0 409 694";
+	const upper = "0 0 409 347";
+	const lower = "0 347 409 347";
+
+	if (showHalf === "upper") {
+		return upper;
+	}
+	if (showHalf === "lower") {
+		return lower;
+	}
+	return full;
+}
+
 export function mapToCssVars(colors: OdontogramColors) {
 	const cssVars: Record<string, string> = {};
 

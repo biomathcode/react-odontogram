@@ -13,25 +13,25 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # 6.0.2
         with:
           fetch-depth: 0
 
       - name: Set up pnpm
-        uses: pnpm/action-setup@v4
+        uses: pnpm/action-setup@0e279bb959325dab635dd2c09392533439d90093 # 6.0.8
         with:
           version: latest
           run_install: false
 
       - name: Install Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # 6.4.0
         with:
-          node-version: 20
+          node-version: 24
           cache: "pnpm"
           cache-dependency-path: pnpm-lock.yaml # 👈 Explicitly tell setup-node where to find lockfile
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile --color=always
 
       - name: Check types
         run: pnpm tsc
@@ -43,7 +43,7 @@ jobs:
         run: pnpm test:coverage
 
       - name: Upload results to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@e79a6962e0d4c0c17b229090214935d2e33f8354 # 6.0.1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
 

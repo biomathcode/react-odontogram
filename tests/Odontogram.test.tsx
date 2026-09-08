@@ -146,6 +146,57 @@ describe("Odontogram", () => {
 	});
 });
 
+describe("FDI quadrant positioning (Q3/Q4)", () => {
+	it("renders Q3 teeth (31–38) inside the mirrored lower transform (circle layout)", () => {
+		render(<Odontogram layout="circle" />);
+		const tooth = screen.getByRole("option", { name: "Tooth 31" });
+		const group = tooth.closest("g[transform]");
+		expect(group).toHaveAttribute(
+			"transform",
+			"scale(-1, -1) translate(-409, -694)",
+		);
+	});
+
+	it("renders Q4 teeth (41–48) inside the same-side lower transform (circle layout)", () => {
+		render(<Odontogram layout="circle" />);
+		const tooth = screen.getByRole("option", { name: "Tooth 41" });
+		const group = tooth.closest("g[transform]");
+		expect(group).toHaveAttribute("transform", "scale(1, -1) translate(0, -694)");
+	});
+
+	it("renders Q3 teeth (31–38) inside the mirrored lower transform (square layout)", () => {
+		render(<Odontogram layout="square" />);
+		const tooth = screen.getByRole("option", { name: "Tooth 31" });
+		const group = tooth.closest("g[transform]");
+		expect(group).toHaveAttribute(
+			"transform",
+			"translate(840, 0) scale(-1, -1) translate(-55,-150)",
+		);
+	});
+
+	it("renders Q4 teeth (41–48) inside the same-side lower transform (square layout)", () => {
+		render(<Odontogram layout="square" />);
+		const tooth = screen.getByRole("option", { name: "Tooth 41" });
+		const group = tooth.closest("g[transform]");
+		expect(group).toHaveAttribute("transform", "scale(1, -1) translate(0, -150)");
+	});
+
+	it("onChange returns correct FDI codes for lower-jaw teeth", () => {
+		const onChange = vi.fn();
+		render(<Odontogram onChange={onChange} />);
+
+		fireEvent.click(screen.getByRole("option", { name: "Tooth 31" }));
+		expect(onChange).toHaveBeenLastCalledWith(
+			expect.arrayContaining([expect.objectContaining({ id: "teeth-31" })]),
+		);
+
+		fireEvent.click(screen.getByRole("option", { name: "Tooth 41" }));
+		expect(onChange).toHaveBeenLastCalledWith(
+			expect.arrayContaining([expect.objectContaining({ id: "teeth-41" })]),
+		);
+	});
+});
+
 describe("notation helpers", () => {
 	it("converts FDI notation to Universal and Palmer", () => {
 		expect(convertFDIToNotation("teeth-21", "Universal")).toBe("9");

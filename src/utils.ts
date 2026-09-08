@@ -95,14 +95,14 @@ export const quadrants: Array<{
 		label: "Upper Left",
 	},
 	{
-		name: "third",
-		transform: "scale(1, -1) translate(0, -150)",
-		label: "Lower Right",
-	},
-	{
 		name: "fourth",
 		transform: "translate(840, 0) scale(-1, -1) translate(-55,-150)",
 		label: "Lower Left",
+	},
+	{
+		name: "third",
+		transform: "scale(1, -1) translate(0, -150)",
+		label: "Lower Right",
 	},
 ];
 
@@ -122,14 +122,14 @@ export const oldquadrants: Array<{
 		label: "Upper Left",
 	},
 	{
-		name: "third",
-		transform: "scale(1, -1) translate(0, -694)",
-		label: "Lower Right",
-	},
-	{
 		name: "fourth",
 		transform: "scale(-1, -1) translate(-409, -694)",
 		label: "Lower Left",
+	},
+	{
+		name: "third",
+		transform: "scale(1, -1) translate(0, -694)",
+		label: "Lower Right",
 	},
 ];
 
